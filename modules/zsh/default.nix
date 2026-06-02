@@ -19,9 +19,9 @@
 
   # 4. Глобальные переменные окружения: устанавливаем Neovim редактором по умолчанию.
   environment.variables = {
-    EDITOR = lib.mkDefault "nvim";
-    VISUAL = lib.mkDefault "nvim";
-    PAGER = lib.mkDefault "less";
+    EDITOR = lib.mkForce "nvim";
+    VISUAL = lib.mkForce "nvim";
+    PAGER = lib.mkForce "less";
   };
 
   environment.systemPackages = with pkgs; [

@@ -1,14 +1,26 @@
-# ~/nixos-config/home-manager/sgm/programs/git.nix
-{...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs.git = {
     enable = true;
-    userName = "Shuchalin Georgiy";
-    userEmail = "shuchalin_georgiy@live.ru";
-    extraConfig = {
+
+    # Правильная структура: settings.user
+    settings = {
+      user = {
+        name = "Shuchalin Georgiy";
+        email = "shuchalin_georgiy@live.ru";
+      };
+
+      # Другие настройки git
       init.defaultBranch = "main";
-      # Подпись коммитов по умолчанию (если нужен GPG)
-      # commit.gpgsign = true;
-      # gpg.program = "gpg";
+      core = {
+        editor = "nvim";
+        autocrlf = "input";
+      };
+      pull.rebase = true;
+      push.autoSetupRemote = true;
     };
   };
 }
