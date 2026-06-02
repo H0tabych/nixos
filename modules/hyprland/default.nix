@@ -1,4 +1,7 @@
 # ~/nixos-config/modules/hyprland/default.nix
+# Модуль для Hyprland Wayland compositor
+# Примечание: programs.hyprland.enable включает пакет
+# Конфигурация в home-manager: home-manager/sgm/hyprland.nix
 {
   config,
   pkgs,

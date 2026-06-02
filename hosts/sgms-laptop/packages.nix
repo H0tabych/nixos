@@ -22,5 +22,10 @@
     cmake # Кроссплатформенная система сборки
     python3 # Интерпретатор Python
     # sqlite              # Легковесная реляционная БД
+
+    # Laptop utilities
+    brightnessctl
+    acpi
+    tlp
   ];
 }

@@ -1,7 +1,10 @@
 # ~/nixos-config/modules/zsh/default.nix
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # 1. Включаем программу Zsh на системном уровне.
   #    Это решает проблему безопасности: Zsh регистрируется в /etc/shells,
   #    и NixOS знает, что эта оболочка полностью настроена и безопасна.
@@ -9,14 +12,22 @@
 
   # 2. Добавляем Zsh в список доступных оболочек (делается автоматически
   #    при programs.zsh.enable, но явное указание не помешает).
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
 
   # 3. Устанавливаем Zsh как оболочку по умолчанию для всех новых пользователей.
   users.defaultUserShell = pkgs.zsh;
 
   # 4. Глобальные переменные окружения: устанавливаем Neovim редактором по умолчанию.
   environment.variables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
+    EDITOR = lib.mkDefault "nvim";
+    VISUAL = lib.mkDefault "nvim";
+    PAGER = lib.mkDefault "less";
   };
+
+  environment.systemPackages = with pkgs; [
+    zsh
+    zsh-completions
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+  ];
 }

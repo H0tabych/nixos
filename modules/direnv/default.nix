@@ -1,10 +1,23 @@
-# ~/nixos-config/modules/direnv/default.nix
-{...}: {
-  # Включаем direnv и интеграцию с Zsh в Home Manager
+# Системный модуль для direnv и nix-ld
+# Примечание: Это NixOS-модуль, не Home Manager
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   programs.direnv = {
     enable = true;
-    enableZshIntegration = true; # Автоматически загружать direnv в Zsh
-    nix-direnv.enable = true; # Быстрая загрузка Nix-окружений
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
   };
-  programs.nix-ld.enable = true;
+
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+      zlib
+      openssl
+    ];
+  };
 }
