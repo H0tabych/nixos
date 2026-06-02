@@ -19,13 +19,17 @@
     # Модуль для настройки гибридной графики NVIDIA (создадим позже)
     ../../modules/nvidia
     ../../modules/hyprland
-    ../../modules/audio
     ../../modules/zsh
     ../../modules/automount
     ../../modules/vpn
     ../../modules/docker
 
     ../../modules/direnv
+
+    # Audio modules
+    ../../modules/audio/pipewire.nix
+    ../../modules/audio/bluetooth.nix
+    ../../modules/audio/xdg-portal.nix
 
     ../../modules/graphical-apps/firefox.nix
     ../../modules/graphical-apps/libreoffice.nix
