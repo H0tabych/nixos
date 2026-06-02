@@ -1,14 +1,14 @@
 # ~/nixos-config/home-manager/sgm/programs/zsh.nix
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   programs.zsh = {
     enable = true;
     initContent = ''
       autoload -U compinit && compinit
       setopt HIST_IGNORE_DUPS SHARE_HISTORY
-      export EDITOR="nvim"
-      export VISUAL="nvim"
     '';
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;

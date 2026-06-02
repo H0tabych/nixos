@@ -10,7 +10,6 @@
     btop # Красивый мониторинг ресурсов
     pciutils # Утилиты для работы с PCI-устройствами (lspci)
     usbutils # Утилиты для работы с USB-устройствами (lsusb)
-    vulkan-tools # Для проверки работы Vulkan и PRIME (vkcube)
 
     # --- Сеть и безопасность ---
     openssh # SSH-клиент и сервер

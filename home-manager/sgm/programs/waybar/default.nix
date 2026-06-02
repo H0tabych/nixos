@@ -1,7 +1,9 @@
 # ~/nixos-config/home-manager/sgm/programs/waybar/default.nix
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   home.packages = with pkgs; [
     waybar
     rofi
@@ -11,14 +13,13 @@
     gawk
     procps
 
-    nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
   ];
 
   # Размещаем конфигурационные файлы Waybar
   xdg.configFile."waybar/config.jsonc".source = ./config.jsonc;
   xdg.configFile."waybar/style.css".source = ./style.css;
-  
+
   xdg.configFile."waybar/scripts/weather.sh" = {
     source = ./scripts/weather.sh;
     executable = true;

@@ -1,0 +1,17 @@
+# Nix build outputs
+result
+result-*
+
+# Editor
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (если добавите sops/agenix)
+secrets/*.dec
+*.secret
