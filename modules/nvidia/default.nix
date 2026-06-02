@@ -1,11 +1,14 @@
 # ~/nixos-config/modules/nvidia/default.nix
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # --- Базовая поддержка OpenGL ---
   hardware.graphics = {
-    enable = true;       # Включаем поддержку OpenGL
-    enable32Bit = true;  # Включаем поддержку 32-битных приложений (для игр и Steam)
+    enable = true; # Включаем поддержку OpenGL
+    enable32Bit = true; # Включаем поддержку 32-битных приложений (для игр и Steam)
   };
 
   # --- Основная конфигурация драйвера NVIDIA ---
@@ -32,14 +35,11 @@
         enable = true;
         enableOffloadCmd = true; # Добавляет команду 'nvidia-offload'
       };
-      # Указываем PCI-идентификаторы, полученные на шаге 1
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
     };
   };
 
   # --- Драйверы для Xorg и Wayland ---
-  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
+  services.xserver.videoDrivers = ["modesetting" "nvidia"];
 
   # --- Правила udev для управления питанием NVIDIA (рекомендовано) ---
   services.udev.extraRules = ''

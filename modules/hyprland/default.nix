@@ -1,7 +1,10 @@
 # ~/nixos-config/modules/hyprland/default.nix
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # --- Включение Hyprland ---
   programs.hyprland = {
     enable = true;
@@ -16,13 +19,22 @@
 
   # --- Переменные окружения для Wayland ---
   environment.variables = {
-    # Заставляем Qt-приложения использовать Wayland
-    QT_QPA_PLATFORM = "wayland";
-    # Подсказываем приложениям на базе Chromium/Electron использовать Wayland
-    NIXOS_OZONE_WL = "1";
-    # Дополнительные переменные для улучшения работы NVIDIA на Wayland
-    LIBVA_DRIVER_NAME = "nvidia";
-    # Устраняет проблемы с мерцанием курсора в некоторых играх/приложениях
-    WLR_NO_HARDWARE_CURSORS = "1";
+    # Для Wayland-приложений
+    QT_QPA_PLATFORM = lib.mkDefault "wayland;xcb";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    SDL_VIDEODRIVER = lib.mkDefault "wayland";
+    CLUTTER_BACKEND = "wayland";
+
+    # Для Electron-приложений
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+  };
+
+  # XDG Desktop Portal для Wayland
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
   };
 }

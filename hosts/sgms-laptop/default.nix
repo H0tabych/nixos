@@ -15,6 +15,7 @@
     ./impermanence.nix
     # Список системных пакетов
     ./packages.nix
+    ./nvidia.nix
     # Модуль для настройки гибридной графики NVIDIA (создадим позже)
     ../../modules/nvidia
     ../../modules/hyprland
