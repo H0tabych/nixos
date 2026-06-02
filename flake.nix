@@ -10,7 +10,7 @@
     impermanence.url = "github:nix-community/impermanence";
     hyprland.url = "github:hyprwm/Hyprland";
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -44,13 +44,15 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs user stateVersion;
+              };
               home-manager.users.${user} = {
                 imports =
                   [
                     ./home-manager/${user}/home.nix
                   ]
                   ++ extraHmModules;
-                home.stateVersion = stateVersion;
               };
             }
           ]
@@ -65,7 +67,7 @@
           inputs.hyprland.nixosModules.default
         ];
         extraHmModules = [
-          inputs.nixvim.homeManagerModules.nixvim
+          inputs.nixvim.homeModules.nixvim
         ];
       };
 

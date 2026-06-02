@@ -3,7 +3,7 @@
   config,
   pkgs,
   user,
-  nixosVersion,
+  stateVersion,
   ...
 }: {
   # Базовая информация о пользователе
@@ -62,5 +62,5 @@
   };
 
   # Состояние home-manager должно соответствовать версии NixOS
-  home.stateVersion = nixosVersion;
+  home.stateVersion = stateVersion;
 }
