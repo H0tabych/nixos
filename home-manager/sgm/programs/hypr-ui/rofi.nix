@@ -1,0 +1,318 @@
+# ~/nixos-config/home-manager/sgm/programs/hypr-ui/rofi.nix
+{ config, pkgs, ... }:
+
+let
+  # Наша цветовая палитра (в формате rgba для прозрачности)
+  background = "rgba(18, 18, 18, 0.85)";   # Глубокий тёмный, почти непрозрачный
+  foreground = "#E0E0E0";                  # Мягкий белый текст
+  accent = "#4ADE80";                      # Зелёный акцент
+  blue = "#60A5FA";                        # Синий для дополнительных элементов
+  yellow = "#FBBF24";                      # Жёлтый для предупреждений
+  red = "#EF4444";                         # Красный для срочности
+  backgroundAlt = "rgba(30, 30, 30, 0.7)"; # Чуть более светлый фон для элементов
+  borderColor = "rgba(74, 222, 128, 0.3)"; # Полупрозрачная зелёная рамка
+in
+{
+  home.packages = with pkgs; [
+    rofi  # уже установлен в вашей системе
+  ];
+
+  # Создаём тему Rofi
+  xdg.configFile."rofi/themes/glassmorphism.rasi".text = ''
+    /***** Configuration *****/
+    configuration {
+        modi:                       "drun,run,filebrowser";
+        show-icons:                 true;
+        display-drun:               " Apps";
+        display-run:                " Run";
+        display-filebrowser:        " Files";
+        display-window:             " Windows";
+        drun-display-format:        "{name}";
+        window-format:              "{w} · {c} · {t}";
+        font:                       "JetBrains Mono 12";
+    }
+
+    /***** Global Properties *****/
+    * {
+        background-colour:           ${background};
+        foreground-colour:           ${foreground};
+        border-colour:               ${borderColor};
+        handle-colour:               ${accent};
+        alternate-background:        ${backgroundAlt};
+        normal-background:           ${background};
+        normal-foreground:           ${foreground};
+        urgent-background:           ${red};
+        urgent-foreground:           ${background};
+        active-background:           ${blue};
+        active-foreground:           ${background};
+        selected-normal-background:  ${accent};
+        selected-normal-foreground:  ${background};
+        selected-urgent-background:  ${blue};
+        selected-urgent-foreground:  ${background};
+        selected-active-background:  ${red};
+        selected-active-foreground:  ${background};
+        alternate-normal-background: ${background};
+        alternate-normal-foreground: ${foreground};
+        alternate-urgent-background: ${red};
+        alternate-urgent-foreground: ${background};
+        alternate-active-background: ${blue};
+        alternate-active-foreground: ${background};
+    }
+
+    /***** Main Window *****/
+    window {
+        transparency:                "real";
+        location:                    center;
+        anchor:                      center;
+        fullscreen:                  false;
+        width:                       800px;
+        x-offset:                    0px;
+        y-offset:                    0px;
+
+        enabled:                     true;
+        margin:                      0px;
+        padding:                     0px;
+        border:                      1px solid;
+        border-radius:               20px;
+        border-color:                @border-colour;
+        cursor:                      "default";
+        background-color:            @background-colour;
+    }
+
+    /***** Main Box *****/
+    mainbox {
+        enabled:                     true;
+        spacing:                     10px;
+        margin:                      0px;
+        padding:                     40px;
+        border:                      0px solid;
+        border-radius:               0px 0px 0px 0px;
+        border-color:                @border-colour;
+        background-color:            transparent;
+        children:                    [ "inputbar", "message", "listview", "mode-switcher" ];
+    }
+
+    /***** Inputbar *****/
+    inputbar {
+        enabled:                     true;
+        spacing:                     10px;
+        margin:                      0px;
+        padding:                     0px;
+        border:                      0px solid;
+        border-radius:               0px;
+        border-color:                @border-colour;
+        background-color:            transparent;
+        text-color:                  @foreground-colour;
+        children:                    [ "prompt", "textbox-prompt-colon", "entry" ];
+    }
+
+    prompt {
+        enabled:                     true;
+        background-color:            inherit;
+        text-color:                  inherit;
+    }
+    textbox-prompt-colon {
+        enabled:                     true;
+        expand:                      false;
+        str:                         "::";
+        background-color:            inherit;
+        text-color:                  inherit;
+    }
+    entry {
+        enabled:                     true;
+        background-color:            inherit;
+        text-color:                  inherit;
+        cursor:                      text;
+        placeholder:                 "Search...";
+        placeholder-color:           inherit;
+    }
+    num-filtered-rows {
+        enabled:                     true;
+        expand:                      false;
+        background-color:            inherit;
+        text-color:                  inherit;
+    }
+    textbox-num-sep {
+        enabled:                     true;
+        expand:                      false;
+        str:                         "/";
+        background-color:            inherit;
+        text-color:                  inherit;
+    }
+    num-rows {
+        enabled:                     true;
+        expand:                      false;
+        background-color:            inherit;
+        text-color:                  inherit;
+    }
+    case-indicator {
+        enabled:                     true;
+        background-color:            inherit;
+        text-color:                  inherit;
+    }
+
+    /***** Listview *****/
+    listview {
+        enabled:                     true;
+        columns:                     2;
+        lines:                       10;
+        cycle:                       true;
+        dynamic:                     true;
+        scrollbar:                   true;
+        layout:                      vertical;
+        reverse:                     false;
+        fixed-height:                true;
+        fixed-columns:               true;
+
+        spacing:                     5px;
+        margin:                      0px;
+        padding:                     0px;
+        border:                      0px solid;
+        border-radius:               0px;
+        border-color:                @border-colour;
+        background-color:            transparent;
+        text-color:                  @foreground-colour;
+        cursor:                      "default";
+    }
+    scrollbar {
+        handle-width:                10px;
+        handle-color:                @handle-colour;
+        border-radius:               10px;
+        background-color:            @alternate-background;
+    }
+
+    /***** Elements *****/
+    element {
+        enabled:                     true;
+        spacing:                     10px;
+        margin:                      0px;
+        padding:                     5px 10px;
+        border:                      0px solid;
+        border-radius:               20px;
+        border-color:                @border-colour;
+        background-color:            transparent;
+        text-color:                  @foreground-colour;
+        cursor:                      pointer;
+    }
+    element normal.normal {
+        background-color:            var(normal-background);
+        text-color:                  var(normal-foreground);
+    }
+    element normal.urgent {
+        background-color:            var(urgent-background);
+        text-color:                  var(urgent-foreground);
+    }
+    element normal.active {
+        background-color:            var(active-background);
+        text-color:                  var(active-foreground);
+    }
+    element selected.normal {
+        background-color:            var(selected-normal-background);
+        text-color:                  var(selected-normal-foreground);
+    }
+    element selected.urgent {
+        background-color:            var(selected-urgent-background);
+        text-color:                  var(selected-urgent-foreground);
+    }
+    element selected.active {
+        background-color:            var(selected-active-background);
+        text-color:                  var(selected-active-foreground);
+    }
+    element alternate.normal {
+        background-color:            var(alternate-normal-background);
+        text-color:                  var(alternate-normal-foreground);
+    }
+    element alternate.urgent {
+        background-color:            var(alternate-urgent-background);
+        text-color:                  var(alternate-urgent-foreground);
+    }
+    element alternate.active {
+        background-color:            var(alternate-active-background);
+        text-color:                  var(alternate-active-foreground);
+    }
+    element-icon {
+        background-color:            transparent;
+        text-color:                  inherit;
+        size:                        24px;
+        cursor:                      inherit;
+    }
+    element-text {
+        background-color:            transparent;
+        text-color:                  inherit;
+        highlight:                   inherit;
+        cursor:                      inherit;
+        vertical-align:              0.5;
+        horizontal-align:            0.0;
+    }
+
+    /***** Mode Switcher *****/
+    mode-switcher {
+        enabled:                     true;
+        spacing:                     10px;
+        margin:                      0px;
+        padding:                     0px;
+        border:                      0px solid;
+        border-radius:               0px;
+        border-color:                @border-colour;
+        background-color:            transparent;
+        text-color:                  @foreground-colour;
+    }
+    button {
+        padding:                     5px 10px;
+        border:                      0px solid;
+        border-radius:               20px;
+        border-color:                @border-colour;
+        background-color:            @alternate-background;
+        text-color:                  inherit;
+        cursor:                      pointer;
+    }
+    button selected {
+        background-color:            var(selected-normal-background);
+        text-color:                  var(selected-normal-foreground);
+    }
+
+    /***** Message *****/
+    message {
+        enabled:                     true;
+        margin:                      0px;
+        padding:                     0px;
+        border:                      0px solid;
+        border-radius:               0px 0px 0px 0px;
+        border-color:                @border-colour;
+        background-color:            transparent;
+        text-color:                  @foreground-colour;
+    }
+    textbox {
+        padding:                     5px 10px;
+        border:                      0px solid;
+        border-radius:               20px;
+        border-color:                @border-colour;
+        background-color:            @alternate-background;
+        text-color:                  @foreground-colour;
+        vertical-align:              0.5;
+        horizontal-align:            0.0;
+        highlight:                   none;
+        placeholder-color:           @foreground-colour;
+        blink:                       true;
+        markup:                      true;
+    }
+    error-message {
+        padding:                     10px;
+        border:                      2px solid;
+        border-radius:               20px;
+        border-color:                @border-colour;
+        background-color:            @background-colour;
+        text-color:                  @foreground-colour;
+    }
+  '';
+
+  # Настройка Rofi для использования новой темы
+  xdg.configFile."rofi/config.rasi".text = ''
+    configuration {
+      modi: "drun,run,filebrowser";
+      show-icons: true;
+      font: "JetBrains Mono 12";
+    }
+    @theme "glassmorphism"
+  '';
+}

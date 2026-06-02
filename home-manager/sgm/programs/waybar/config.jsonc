@@ -1,0 +1,128 @@
+// ~/nixos-config/home-manager/sgm/programs/waybar/config.jsonc
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 6,
+    "margin-top": 8,
+    "margin-left": 8,
+    "margin-right": 8,
+    "modules-left": [
+        "custom/launcher",
+        "custom/weather",
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "custom/audio-brightness",
+        "custom/net-bluetooth",
+        "custom/cpu-mem",
+        "hyprland/language",
+        "battery",
+        "tray",
+        "custom/powermenu"
+    ],
+    "custom/launcher": {
+        "format": "",
+        "on-click": "rofi -show drun -show-icons",
+        "tooltip": false
+    },
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "all-outputs": false,
+        "active-only": false
+    },
+    "clock": {
+        "interval": 60,
+        "format": "{:%H:%M}",
+        "format-alt": "{:%a %d %b}",
+        "on-click": "~/.config/waybar/scripts/toggle-time.sh",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "custom/weather": {
+        "exec": "~/.config/waybar/scripts/weather.sh",
+        "interval": 1800,
+        "return-type": "json",
+        "format": "{}",
+        "tooltip": true
+    },
+    "custom/audio-brightness": {
+        "exec": "~/.config/waybar/scripts/audio-brightness.sh",
+        "interval": 2,
+        "return-type": "json",
+        "format": "{}",
+        "on-click": "pavucontrol",
+        "on-scroll-up": "pamixer -i 5",
+        "on-scroll-down": "pamixer -d 5",
+        "tooltip": false
+    },
+    "custom/net-bluetooth": {
+        "exec": "~/.config/waybar/scripts/net-bluetooth.sh",
+        "interval": 3,
+        "return-type": "json",
+        "format": "{}",
+        "on-click": "nm-dmenu",
+        "tooltip": true
+    },
+    "custom/cpu-mem": {
+        "exec": "~/.config/waybar/scripts/cpu-mem.sh",
+        "interval": 2,
+        "return-type": "json",
+        "format": "{}",
+        "on-click": "~/.config/waybar/scripts/toggle-cpu-mem-format.sh",
+        "tooltip": false
+    },
+    "hyprland/language": {
+        "format": "{short}",
+        "keyboard-name": "at-translated-set-2-keyboard",
+        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next",
+        "tooltip": false
+    },
+    "battery": {
+        "bat": "BAT1", // замените на своё
+        "interval": 60,
+        "format": "{capacity}% {icon}",
+        "format-icons": {
+            "default": [
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "charging": [
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "discharging": [
+                "",
+                "",
+                "",
+                "",
+                ""
+            ]
+        },
+        "states": {
+            "critical": 15,
+            "warning": 30
+        },
+        "format-critical": "<span foreground='#ef4444'>{capacity}% </span>",
+        "format-warning": "<span foreground='#fbbf24'>{capacity}% {icon}</span>",
+        "tooltip": false
+    },
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
+    },
+    "custom/powermenu": {
+        "format": "⏻",
+        "on-click": "~/.config/waybar/scripts/powermenu.sh",
+        "tooltip": false
+    }
+}

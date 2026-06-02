@@ -1,0 +1,119 @@
+/* ~/nixos-config/home-manager/sgm/programs/waybar/style.css */
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(18, 18, 18, 0.65);
+  border-radius: 12px;
+  color: #e0e0e0;
+  transition: background 0.3s;
+}
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+tooltip {
+  background: #1e1e1e;
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: 10px;
+}
+
+tooltip label {
+  color: #e0e0e0;
+}
+
+/* Единый «стеклянный» стиль всех модулей */
+#waybar .module {
+  padding: 0 10px;
+  margin: 4px 2px;
+  background: rgba(30, 30, 30, 0.5);
+  border: 1px solid rgba(74, 222, 128, 0.21);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* При наведении – аккуратная подсветка, не перекрывающая текст */
+#waybar .module:hover {
+  background: rgba(74, 222, 128, 0.18);
+  border-color: rgba(74, 222, 128, 0.32);
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.25);
+}
+
+/* Workspaces — исключение */
+#workspaces button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 0 2px;
+  padding: 0 5px;
+  color: #e0e0e0;
+  border-radius: 6px;
+}
+
+#workspaces button.active {
+  background: #4ade80;
+  color: #121212;
+  font-weight: bold;
+}
+
+#workspaces button.urgent {
+  background: #ef4444;
+  color: #121212;
+}
+
+/* Индивидуальные цвета иконок и текста */
+#custom-launcher {
+  color: #4ade80;
+  font-size: 16px;
+}
+
+#custom-powermenu {
+  color: #60a5fa;
+  font-size: 15px;
+}
+
+#clock {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+#custom-weather {
+  color: #60a5fa;
+}
+
+#language {
+  color: #60a5fa;
+}
+
+#battery {
+  color: #4ade80;
+}
+
+#custom-audio-brightness {
+  color: #e0e0e0;
+}
+
+#custom-net-bluetooth {
+  color: #e0e0e0;
+}
+
+#custom-cpu-mem {
+  color: #e0e0e0;
+}
+
+/* CPU/Memory критические цвета */
+.cpu-warning,
+.memory-warning {
+  color: #fbbf24;
+}
+.cpu-critical,
+.memory-critical {
+  color: #ef4444;
+}
