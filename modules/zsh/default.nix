@@ -25,7 +25,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    zsh
     zsh-completions
     zsh-syntax-highlighting
     zsh-autosuggestions
