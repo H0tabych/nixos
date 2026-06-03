@@ -1,16 +1,26 @@
-# ~/nixos-config/home-manager/sgm/hyprland.nix
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   wayland.windowManager.hyprland = {
     enable = true;
+
+    # Используем пакет из NixOS-модуля (не дублируем)
     package = null;
     portalPackage = null;
 
+    # Важно для systemd-сервисов
+    systemd.enable = true;
+    systemd.variables = ["--all"];
+
+    # Включаем XWayland для совместимости
+    xwayland.enable = true;
+
+    # Конфигурация в формате Nix (конвертируется в Lua/INI)
     settings = {
-      # Сюда можно перенести все настройки из hyprland.conf
+      # === ENVIRONMENT VARIABLES ===
       env = [
         "AQ_DRM_DEVICES,/dev/dri/card1:/dev/dri/card0"
         "GBM_BACKEND,nvidia-drm"
@@ -18,37 +28,39 @@
         "__GL_VRR_ALLOWED,1"
         "HYPRCURSOR_SIZE,16"
         "XCURSOR_SIZE,16"
+        "NIXOS_OZONE_WL,1"
       ];
-      #monitor = [
-      #  "eDP-1, 1920x1080@60, 0x0, 1"
-      #];
 
+      # === MONITORS ===
+      # monitor = [
+      #   "eDP-1, 1920x1080@60, 0x0, 1"
+      # ];
+
+      # === GENERAL ===
       general = {
         gaps_in = 3;
         gaps_out = 10;
-
         border_size = 1;
-
-        # https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
         "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
         "col.inactive_border" = "rgba(595959aa)";
-
-        # Set to true enable resizing windows by clicking and dragging on borders and gaps
         resize_on_border = false;
-
-        # Please see https://wiki.hypr.land/Configuring/Tearing/ before you turn this on
         allow_tearing = false;
-
         layout = "dwindle";
       };
 
+      # === DECORATION ===
       decoration = {
-        rounding = 5;
-        rounding_power = 1;
-
-        # Change transparency of focused and unfocused windows
+        rounding = 10;
         active_opacity = 1.0;
         inactive_opacity = 1.0;
+        fullscreen_opacity = 1.0;
+
+        blur = {
+          enabled = true;
+          size = 5;
+          passes = 1;
+          vibrancy = 0.1696;
+        };
 
         shadow = {
           enabled = true;
@@ -56,84 +68,69 @@
           render_power = 3;
           color = "rgba(1a1a1aee)";
         };
-
-        # https://wiki.hypr.land/Configuring/Variables/#blur
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 1;
-
-          vibrancy = 0.1696;
-        };
       };
 
-      # правило для размытия панели
-      #layerrule = [
-      #  "blur on, match:namespace foot"
-      #  "blur on, match:namespace waybar"
-      # "ignorealpha 0.2, match:namespace waybar"
-      #];
-
+      # === ANIMATIONS ===
       animations = {
-        enabled = "yes, please :)";
+        enabled = true; # Было: "yes, please :)" — теперь только boolean
 
-        # Default curves, see https://wiki.hypr.land/Configuring/Animations/#curves
         bezier = [
-          #  NAME,           X0,   Y0,   X1,   Y1
-          "easeOutQuint,   0.23, 1,    0.32, 1"
+          "easeOutQuint, 0.23, 1, 0.32, 1"
           "easeInOutCubic, 0.65, 0.05, 0.36, 1"
-          "linear,         0,    0,    1,    1"
-          "almostLinear,   0.5,  0.5,  0.75, 1"
-          "quick,          0.15, 0,    0.1,  1"
+          "linear, 0, 0, 1, 1"
+          "almostLinear, 0.5, 0.5, 0.75, 1"
+          "quick, 0.15, 0, 0.1, 1"
         ];
 
-        # Default animations, see https://wiki.hypr.land/Configuring/Animations/
         animation = [
-          #  NAME,          ONOFF, SPEED, CURVE,        [STYLE]
-          "global,        1,     10,    default"
-          "border,        1,     5.39,  easeOutQuint"
-          "windows,       1,     4.79,  easeOutQuint"
-          "windowsIn,     1,     4.1,   easeOutQuint, popin 87%"
-          "windowsOut,    1,     1.49,  linear,       popin 87%"
-          "fadeIn,        1,     1.73,  almostLinear"
-          "fadeOut,       1,     1.46,  almostLinear"
-          "fade,          1,     3.03,  quick"
-          "layers,        1,     3.81,  easeOutQuint"
-          "layersIn,      1,     4,     easeOutQuint, fade"
-          "layersOut,     1,     1.5,   linear,       fade"
-          "fadeLayersIn,  1,     1.79,  almostLinear"
-          "fadeLayersOut, 1,     1.39,  almostLinear"
-          "workspaces,    1,     1.94,  almostLinear, fade"
-          "workspacesIn,  1,     1.21,  almostLinear, fade"
-          "workspacesOut, 1,     1.94,  almostLinear, fade"
-          "zoomFactor,    1,     7,     quick"
+          "global, 1, 10, default"
+          "border, 1, 5.39, easeOutQuint"
+          "windows, 1, 4.79, easeOutQuint"
+          "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
+          "windowsOut, 1, 1.49, linear, popin 87%"
+          "fadeIn, 1, 1.73, almostLinear"
+          "fadeOut, 1, 1.46, almostLinear"
+          "fade, 1, 3.03, quick"
+          "layers, 1, 3.81, easeOutQuint"
+          "layersIn, 1, 4, easeOutQuint, fade"
+          "layersOut, 1, 1.5, linear, fade"
+          "fadeLayersIn, 1, 1.79, almostLinear"
+          "fadeLayersOut, 1, 1.39, almostLinear"
+          "workspaces, 1, 1.94, almostLinear, fade"
+          "workspacesIn, 1, 1.21, almostLinear, fade"
+          "workspacesOut, 1, 1.94, almostLinear, fade"
+          "zoomFactor, 1, 7, quick"
         ];
       };
 
-      # See https://wiki.hypr.land/Configuring/Dwindle-Layout/ for more
+      # === DWINDLE LAYOUT ===
       dwindle = {
-        # pseudotile = true; # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-        preserve_split = true; # You probably want this
+        # pseudotile удалён — не указываем
+        preserve_split = true;
       };
 
-      # See https://wiki.hypr.land/Configuring/Master-Layout/ for more
+      # === MASTER LAYOUT ===
       master = {
         new_status = "master";
       };
 
-      # https://wiki.hypr.land/Configuring/Variables/#misc
+      # === MISC ===
       misc = {
-        force_default_wallpaper = -1; # Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo = false; # If true disables the random hyprland logo / anime girl background. :(
+        force_default_wallpaper = -1;
+        disable_hyprland_logo = false;
+        # disable_splash_rendering = true; # опционально
       };
 
+      # === VARIABLES ===
       "$mod" = "SUPER";
       "$terminal" = "foot";
       "$fileManager" = "yazi";
-      # "$menu" = "hyprlauncher";
       "$browser" = "firefox";
+
+      # === KEYBINDINGS ===
       bind =
         [
+          # Основные
           "$mod, C, killactive"
           "$mod, V, togglefloating"
           "$mod, Q, exit"
@@ -141,34 +138,40 @@
           "$mod, B, exec, $browser"
           "$mod, F, exec, $terminal -e $fileManager"
 
-          # Смена фокуса между окнами
+          # Навигация
           "$mod, h, movefocus, l"
           "$mod, l, movefocus, r"
           "$mod, k, movefocus, u"
           "$mod, j, movefocus, d"
 
-          # Скриншот области с аннотацией
+          # Скриншот
           ", Print, exec, ~/.local/bin/screenshot"
-          # Лаунчер rofi
+
+          # Rofi
           "$mod, R, exec, rofi -show drun -show-icons"
-          # Запуск swayimg
+
+          # Swayimg
           "$mod, I, exec, swayimg"
-          # История буфера
+
+          # Буфер обмена
           "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         ]
+        # Генерация биндов для воркспейсов 1-9
         ++ (builtins.concatLists (builtins.genList (i: let
-            ws = i + 1;
+            ws = builtins.toString (i + 1);
           in [
-            "$mod, code:1${toString i}, workspace, ${toString ws}"
-            "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+            "$mod, code:1${builtins.toString i}, workspace, ${ws}"
+            "$mod SHIFT, code:1${builtins.toString i}, movetoworkspace, ${ws}"
           ])
           9));
 
+      # Mouse bindings
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
       ];
 
+      # Media keys (exec-once)
       bindel = [
         ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
         ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
@@ -178,6 +181,7 @@
         ",XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-"
       ];
 
+      # Media keys (latched)
       bindl = [
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPause, exec, playerctl play-pause"
@@ -185,67 +189,57 @@
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
+      # === INPUT ===
       input = {
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
+        follow_mouse = 1;
+        sensitivity = 0;
+
+        touchpad = {
+          natural_scroll = false;
+        };
       };
 
-      # See https://wiki.hypr.land/Configuring/Gestures
-      gesture = "3, horizontal, workspace";
+      # === WINDOW RULES (НОВЫЙ СИНТАКСИС 0.53+) ===
+      # Используем windowrulev2 с анонимным синтаксисом
+      windowrulev2 = [
+        # Подавить maximize события для всех окон
+        "suppressevent maximize, class:.*"
 
-      # Example per-device config
-      # See https://wiki.hypr.land/Configuring/Keywords/#per-device-input-configs for more
-      device = {
-        name = "epic-mouse-v1";
-        sensitivity = -0.5;
-      };
+        # Fix XWayland dragging issues
+        "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
 
-      # See https://wiki.hypr.land/Configuring/Window-Rules/ for more
-      # See https://wiki.hypr.land/Configuring/Workspace-Rules/ for workspace rules
+        # Переместить hyprland-run в нужное место
+        "move 20 monitor_h-120, class:hyprland-run"
+        "float, class:hyprland-run"
 
-      # Example windowrules that are useful
-      windowrule = [
-        {
-          # Ignore maximize requests from all apps. You'll probably like this.
-          name = "suppress-maximize-events";
-          "match:class" = ".*";
-
-          suppress_event = "maximize";
-        }
-        {
-          # Fix some dragging issues with XWayland
-          name = "fix-xwayland-drags";
-          "match:class" = "^$";
-          "match:title" = "^$";
-          "match:xwayland" = true;
-          "match:float" = true;
-          "match:fullscreen" = false;
-          "match:pin" = false;
-
-          no_focus = true;
-        }
-        {
-          name = "move-hyprland-run";
-
-          "match:class" = "hyprland-run";
-
-          move = "20 monitor_h-120";
-          float = "yes";
-        }
+        # Пример: сделать окно терминала плавающим по умолчанию
+        # "float, class:kitty, title:popup"
       ];
 
+      # === LAYER RULES ===
+      layerrule = [
+        "blur, waybar"
+        "ignorealpha 0.2, waybar"
+        "blur, rofi"
+      ];
+
+      # === EXEC ON STARTUP ===
       exec-once = [
         "kanshi"
         "waybar"
         "hyprpaper"
         "hypridle"
         "swayosd"
-        "wl-paste --watch cliphist store" # Интеграция cliphist
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "wl-paste --watch cliphist store"
+        # Важно для systemd-сервисов
+        "dbus-update-activation-environment --systemd --all"
       ];
     };
   };
 
+  # === KANSHI CONFIGURATION ===
   services.kanshi = {
     enable = true;
     systemdTarget = "hyprland-session.target";
