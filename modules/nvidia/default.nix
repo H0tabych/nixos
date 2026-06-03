@@ -28,14 +28,6 @@
 
     # Используем стабильную ветку драйверов
     package = config.boot.kernelPackages.nvidiaPackages.stable;
-
-    # --- Настройка гибридной графики (Prime Offload) ---
-    prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true; # Добавляет команду 'nvidia-offload'
-      };
-    };
   };
 
   # --- Драйверы для Xorg и Wayland ---

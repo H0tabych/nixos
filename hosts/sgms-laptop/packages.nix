@@ -26,6 +26,5 @@
     # Laptop utilities
     brightnessctl
     acpi
-    tlp
   ];
 }

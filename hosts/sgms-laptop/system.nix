@@ -10,7 +10,6 @@
   # --- ЯДРО ---
   # Включаем поддержку последних версий ядра (необязательно, но полезно)
   # boot.kernelPackages = pkgs.linuxPackages_latest;
-  networking.hostName = "sgms-laptop";
   networking.networkmanager.enable = true;
 
   # Firewall
@@ -75,8 +74,4 @@
   # Ограничиваем количество отображаемых поколений при загрузке до 10.
   # systemd-boot автоматически удалит самые старые, когда будет достигнут этот лимит.
   boot.loader.systemd-boot.configurationLimit = 10;
-
-  # --- NIX ---
-  # Включаем экспериментальные функции: Flakes и новую команду `nix`
-  nix.settings.experimental-features = ["nix-command" "flakes"];
 }

@@ -31,13 +31,4 @@
     # Для Electron-приложений
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
   };
-
-  # XDG Desktop Portal для Wayland
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
-  };
 }
