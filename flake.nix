@@ -8,7 +8,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
-    hyprland.url = "github:hyprwm/Hyprland";
     nixvim = {
       url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -64,7 +63,6 @@
         hostname = "sgms-laptop";
         extraModules = [
           inputs.impermanence.nixosModules.impermanence
-          inputs.hyprland.nixosModules.default
         ];
         extraHmModules = [
           inputs.nixvim.homeModules.nixvim
