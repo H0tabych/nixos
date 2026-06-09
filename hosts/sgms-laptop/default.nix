@@ -16,6 +16,7 @@
     # Список системных пакетов
     ./packages.nix
     ./nvidia.nix
+
     # Модуль для настройки гибридной графики NVIDIA (создадим позже)
     ../../modules/nvidia
     ../../modules/hyprland
@@ -23,8 +24,9 @@
     ../../modules/automount
     ../../modules/vpn
     ../../modules/docker
-
     ../../modules/direnv
+    ../../modules/sddm
+    ../../modules/gaming
 
     # Audio modules
     ../../modules/audio/pipewire.nix
@@ -41,12 +43,5 @@
     ../../modules/terminal-apps/docker-compose.nix
     ../../modules/terminal-apps/lazydocker.nix
     ../../modules/terminal-apps/lazygit.nix
-
-    ../../modules/sddm
-
-    ../../modules/gaming
   ];
-
-  # Устанавливаем hostname
-  networking.hostName = "sgms-laptop";
 }

@@ -15,9 +15,22 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # Display management
     kanshi
     wdisplays
     wlr-randr
+
+    # Screenshots and recording
+    grim
+    slurp
+    wf-recorder
+
+    # Clipboard
+    wl-clipboard
+
+    # Notifications
+    mako
+    libnotify
   ];
 
   # --- Переменные окружения для Wayland ---

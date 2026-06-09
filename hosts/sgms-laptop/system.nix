@@ -1,5 +1,6 @@
 # ~/nixos-config/hosts/sgms-laptop/system.nix
 {...}: {
+  networking.hostName = "sgms-laptop";
   # --- ЗАГРУЗЧИК ---
   # Используем systemd-boot (простой и надёжный загрузчик для UEFI-систем)
   boot.loader = {

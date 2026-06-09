@@ -23,10 +23,4 @@
     VISUAL = lib.mkForce "nvim";
     PAGER = lib.mkForce "less";
   };
-
-  environment.systemPackages = with pkgs; [
-    zsh-completions
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-  ];
 }

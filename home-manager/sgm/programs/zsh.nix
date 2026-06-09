@@ -100,5 +100,8 @@
   home.packages = with pkgs; [
     starship
     nix-zsh-completions
+    zsh-completions
+    zsh-syntax-highlighting
+    zsh-autosuggestions
   ];
 }
