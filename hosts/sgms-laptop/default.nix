@@ -31,7 +31,6 @@
     # Audio modules
     ../../modules/audio/pipewire.nix
     ../../modules/audio/bluetooth.nix
-    ../../modules/audio/xdg-portal.nix
 
     ../../modules/graphical-apps/firefox.nix
     ../../modules/graphical-apps/libreoffice.nix

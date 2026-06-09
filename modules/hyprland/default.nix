@@ -44,4 +44,12 @@
     # Для Electron-приложений
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
   };
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true; # Обязательно для wlroots-композиторов
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+  };
 }
