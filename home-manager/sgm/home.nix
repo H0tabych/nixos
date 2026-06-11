@@ -26,6 +26,7 @@
   imports = [
     ./programs/git.nix
     ./programs/zsh.nix
+    ./programs/nvim.nix
     ./programs/foot.nix
     ./programs/theming.nix
     ./programs/yazi.nix
@@ -37,7 +38,6 @@
     ./programs/networkmanager-dmenu.nix
     ./programs/hyprpaper.nix
     ./programs/media.nix
-    ./programs/neovim/default.nix
     ./programs/mako.nix
 
     ./programs/mangohud.nix
