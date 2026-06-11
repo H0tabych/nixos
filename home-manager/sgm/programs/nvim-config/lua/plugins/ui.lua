@@ -67,10 +67,20 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
-    main = "ibl",
+    main = "ibl", -- Указываем главный модуль для lazy.nvim
     opts = {
-      indent = { char = "│" },
-      whitespace = { remove = { trailing = true } },
+      indent = { 
+        char = "│",
+        tab_char = "│",
+      },
+      whitespace = {
+        remove_blankline_trail = true, -- ✅ ИСПРАВЛЕННЫЙ ключ для v3
+      },
+      scope = { 
+        enabled = true, 
+        show_start = false, 
+        show_end = false 
+      },
     },
   },
 }
