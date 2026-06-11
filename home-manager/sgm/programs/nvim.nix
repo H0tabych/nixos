@@ -23,6 +23,10 @@
     sqls                             # SQL
     nodePackages.typescript-language-server    # TypeScript/JavaScript
 
+# === ОТЛАДЧИКИ (DAP) ===
+    python311Packages.debugpy  # Отладчик для Python
+    lldb                       # Отладчик для C/C++
+
     # === ФОРМАТТЕРЫ И ЛИНТЕРЫ (для none-ls) ===
     mypy                             # Python type checker
     black                            # Python formatter
