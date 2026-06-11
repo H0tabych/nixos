@@ -1,20 +1,24 @@
+{ config, pkgs, ... }:
+
 {
-  config,
-  pkgs,
-  ...
-}: {
-  # 1. Устанавливаем Neovim и внешние зависимости, необходимые для плагинов и LSP
+  # 1. Устанавливаем внешние зависимости для плагинов и LSP
   home.packages = with pkgs; [
     # Зависимости для работы плагинов (Telescope, LSP, компиляция)
     git
-    ripgrep # для поиска (Telescope/fzf)
-    fd # для поиска файлов
-    tree-sitter # для парсинга синтаксиса
-    gcc # для компиляции некоторых плагинов
+    ripgrep       # для поиска (Telescope/fzf)
+    fd            # для поиска файлов
+    tree-sitter   # для парсинга синтаксиса
+    gcc           # для компиляции некоторых плагинов
     gnumake
     curl
     wget
     unzip
+    
+    # LSP серверы (опционально, но рекомендуется)
+    pyright       # Python
+    clang-tools   # C++ (clangd)
+    nil           # Nix
+    lua-language-server  # Lua
   ];
 
   # 2. Связываем нашу портативную папку с ~/.config/nvim
@@ -27,18 +31,5 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-
-    # Мы НЕ используем nixvim здесь, чтобы конфигурация оставалась портативной.
-    # Все плагины будут управляться через lazy.nvim внутри nvim-config.
-    extraLuaConfig = ''
-      -- Минимальные настройки, чтобы Neovim вел себя хорошо до загрузки lazy.nvim
-      vim.g.mapleader = " "
-      vim.opt.number = true
-      vim.opt.relativenumber = true
-      vim.opt.tabstop = 4
-      vim.opt.shiftwidth = 4
-      vim.opt.expandtab = true
-      vim.opt.termguicolors = true
-    '';
   };
 }
