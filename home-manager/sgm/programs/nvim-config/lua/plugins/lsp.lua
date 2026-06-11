@@ -1,5 +1,5 @@
 return {
-  -- 1. Автодополнение (зависимости)
+  -- 1. Автодополнение
   {
     "hrsh7th/nvim-cmp",
     event = { "InsertEnter", "CmdlineEnter" },
@@ -34,38 +34,89 @@ return {
     end,
   },
 
-  -- 2. LSP Config (Используем серверы, установленные через Nix)
+  -- 2. LSP Config (НОВЫЙ API Neovim 0.11+)
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
-      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Список серверов, которые мы установили через Nix
+      -- Используем новый API vim.lsp.config (Neovim 0.11+)
+      -- Настройки по умолчанию для всех серверов
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+      })
+
+      -- Список серверов (используем ts_ls вместо tsserver)
       local servers = {
-        "pyright", "nil_ls", "jsonls", "yamlls", 
-        "bashls", "sqls", "html", "cssls", "tsserver"
+        "pyright",
+        "nil_ls",
+        "jsonls",
+        "yamlls",
+        "bashls",
+        "sqls",
+        "html",
+        "cssls",
+        "ts_ls", -- ✅ ИСПРАВЛЕНО: ts_ls вместо tsserver
       }
 
-      for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup({
+      -- Применяем конфигурацию ко всем серверам
+      for _, server in ipairs(servers) do
+        vim.lsp.config(server, {
           capabilities = capabilities,
         })
       end
 
-      -- Специфичные настройки для Lua (так как его нет в списке выше, но он полезен)
-      lspconfig.lua_ls.setup({
+      -- Специфичные настройки для Lua
+      vim.lsp.config("lua_ls", {
         capabilities = capabilities,
         settings = {
           Lua = {
             runtime = { version = "LuaJIT" },
             diagnostics = { globals = { "vim" } },
-            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
             telemetry = { enable = false },
           },
         },
+      })
+
+      -- Специфичные настройки для C/C++
+      vim.lsp.config("clangd", {
+        capabilities = capabilities,
+        cmd = { "clangd", "--background-index", "--clang-tidy" },
+      })
+
+      -- Специфичные настройки для Python
+      vim.lsp.config("pyright", {
+        capabilities = capabilities,
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "openFilesOnly",
+            },
+          },
+        },
+      })
+
+      -- Включаем все настроенные серверы
+      vim.lsp.enable({
+        "pyright",
+        "nil_ls",
+        "jsonls",
+        "yamlls",
+        "bashls",
+        "sqls",
+        "html",
+        "cssls",
+        "ts_ls",
+        "lua_ls",
+        "clangd",
       })
 
       -- Горячие клавиши при подключении LSP
@@ -75,17 +126,20 @@ return {
           local opts = { buffer = ev.buf, noremap = true, silent = true }
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
-        end
+          end
 
           map("n", "gd", vim.lsp.buf.definition, "Go to Definition")
           map("n", "gD", vim.lsp.buf.declaration, "Go to Declaration")
           map("n", "gr", vim.lsp.buf.references, "References")
+          map("n", "gi", vim.lsp.buf.implementation, "Implementation")
           map("n", "K", vim.lsp.buf.hover, "Hover")
           map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
           map("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, "Format")
           map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
           map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
+          map("n", "<leader>e", vim.diagnostic.open_float, "Show Diagnostic")
+          map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostic List")
         end,
       })
     end,
