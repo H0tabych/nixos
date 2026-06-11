@@ -1,18 +1,15 @@
--- ===== 1. BOOTSTRAP LAZY.NVIM =====
+-- ===== BOOTSTRAP LAZY.NVIM =====
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
+    "git", "clone", "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
+    "--branch=stable", lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
 
--- ===== 2. BASIC NEOVIM SETTINGS =====
+-- ===== BASIC SETTINGS =====
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -27,20 +24,31 @@ vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
-
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.clipboard = "unnamedplus"
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.undofile = true       -- персистентный undo
+vim.opt.scrolloff = 8
 
--- ===== 3. FIX FOR NIXOS: Переносим lazy-lock.json в writable директорию =====
+-- ===== LAZY.NVIM LOCKFILE (вне /nix/store) =====
 local state_dir = vim.fn.stdpath("state") .. "/nvim"
-vim.fn.mkdir(state_dir, "p") -- Создаем директорию, если её нет
+vim.fn.mkdir(state_dir, "p")
 
--- ===== 4. LOAD PLUGINS =====
-require("lazy").setup("plugins", {
-  -- КРИТИЧЕСКИ ВАЖНО для NixOS: указываем путь к lockfile вне /nix/store
+-- ===== LOAD PLUGINS (модульная структура) =====
+require("lazy").setup({
+  { import = "plugins.colors" },
+  { import = "plugins.treesitter" },
+  { import = "plugins.telescope" },
+  { import = "plugins.lsp" },
+  { import = "plugins.dap" },
+  { import = "plugins.ui" },
+  { import = "plugins.git" },
+  { import = "plugins.utils" },
+}, {
   lockfile = state_dir .. "/lazy-lock.json",
-  
   checker = { enabled = true, notify = false },
   change_detection = { notify = false },
+  ui = { border = "rounded" },
 })
