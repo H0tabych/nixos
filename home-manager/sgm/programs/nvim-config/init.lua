@@ -1,4 +1,5 @@
--- ===== BOOTSTRAP LAZY.NVIM =====
+-[mason-lspconfig.nvim] failed to install pyright. Installation logs are available in :Mason and :MasonLog                                  
+[mason-lspconfig.nvim] failed to install nil_ls. Installation logs are available in :Mason and :MasonLog - ===== BOOTSTRAP LAZY.NVIM =====
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
