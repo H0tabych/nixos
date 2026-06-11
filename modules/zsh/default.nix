@@ -21,6 +21,5 @@
   environment.variables = {
     EDITOR = lib.mkForce "nvim";
     VISUAL = lib.mkForce "nvim";
-    PAGER = lib.mkForce "less";
   };
 }

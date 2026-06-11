@@ -1,107 +1,61 @@
-# ~/nixos-config/home-manager/sgm/programs/zsh.nix
 {
   config,
   pkgs,
+  lib,
   ...
-}: {
+}: let
+  # Директория с переносимой конфигурацией
+  zshConfigDir = ./zsh-config;
+in {
+  # ===== ЗАВИСИМОСТИ =====
+  home.packages = with pkgs; [
+    bc # Для расчёта времени выполнения команд (тема passion)
+    coreutils # Для date с миллисекундами
+  ];
+
+  # ===== OH-MY-ZSH И ПЛАГИНЫ (через нативную поддержку HM) =====
   programs.zsh = {
     enable = true;
-    initContent = ''
-      autoload -U compinit && compinit
-      setopt HIST_IGNORE_DUPS SHARE_HISTORY
-    '';
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-    defaultKeymap = "emacs";
-    shellAliases = {
-      ll = "ls -l";
-      la = "ls -a";
-      update = "sudo nixos-rebuild switch --flake ~/nixos-config#sgms-laptop";
-      clean = "sudo nix-collect-garbage -d";
+    dotDir = "${config.xdg.configHome}/zsh";
+
+    # Oh-My-Zsh
+    oh-my-zsh = {
+      enable = true;
+      theme = "passion";
+      plugins = ["git" "docker" "kubectl" "systemd"];
+      # Директория с кастомными темами и плагинами
+      custom = "${zshConfigDir}/oh-my-zsh-custom";
     };
+
+    # Дополнительные плагины (не из oh-my-zsh)
+    plugins = [
+      {
+        name = "zsh-autosuggestions";
+        src = pkgs.fetchFromGitHub {
+          owner = "zsh-users";
+          repo = "zsh-autosuggestions";
+          rev = "v0.7.0";
+          sha256 = "1885w3crr503h5n039kmg199sikb1vw1fvaidwr21sj9mn01fs9a";
+        };
+      }
+      {
+        name = "zsh-syntax-highlighting";
+        src = pkgs.fetchFromGitHub {
+          owner = "zsh-users";
+          repo = "zsh-syntax-highlighting";
+          rev = "0.8.0";
+          sha256 = "0g8rp7pc6yy8wn3bzhxh7n8r4j3qyxkj7501ixwa1hhhqbgxxjal";
+        };
+      }
+    ];
+
+    # Переменные окружения (загружаются первыми)
+    envExtra = builtins.readFile "${zshConfigDir}/env.zsh";
+
+    # Основная конфигурация (загружается после oh-my-zsh)
+    initContent = builtins.readFile "${zshConfigDir}/init.zsh";
+
+    # Профиль для login shells
+    profileExtra = builtins.readFile "${zshConfigDir}/profile.zsh";
   };
-
-  programs.starship = {
-    enable = true;
-    settings = {
-      format = ''
-        $os$username$hostname$directory$git_branch$git_status
-        $character'';
-      add_newline = true;
-
-      package.disabled = true;
-      nodejs.disabled = true;
-      docker_context.disabled = true;
-
-      character = {
-        success_symbol = "[▶](bold green)";
-        error_symbol = "[▶](bold red)";
-      };
-
-      os = {
-        format = "[ $symbol]($style)";
-        style = "fg:#4ADE80 bold";
-      };
-
-      username = {
-        format = "[ $user]($style)";
-        style_user = "fg:#60A5FA bold";
-        show_always = true;
-      };
-
-      hostname = {
-        format = "[@$hostname]($style)";
-        style = "fg:#3B82F6 bold";
-        ssh_only = false;
-      };
-
-      directory = {
-        format = "[ $path]($style)[$lock_symbol]($lock_style)";
-        style = "fg:#4ADE80";
-        truncation_length = 3;
-        truncate_to_repo = true;
-      };
-
-      git_branch = {
-        format = "[ $symbol$branch]($style)";
-        symbol = "🌱 ";
-        style = "fg:#FBBF24 bold";
-      };
-
-      git_status = {
-        format = "[$all_status]($style)";
-        style = "fg:#EF4444";
-        conflicted = "🏳️ =";
-        ahead = "⇡\${count}";
-        behind = "⇣\${count}";
-        diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-        untracked = "?\${count}";
-        stashed = "\\$ ";
-        modified = "!\${count}";
-        staged = "+\${count}";
-        renamed = "»\${count}";
-        deleted = "✘\${count}";
-      };
-
-      python = {
-        format = "[ $symbol($version)]($style)";
-        symbol = "🐍 ";
-        style = "fg:#22D3EE";
-      };
-
-      cmd_duration = {
-        format = "[ took $duration]($style)";
-        style = "fg:#E0E0E0";
-        min_time = 2000;
-      };
-    };
-  };
-
-  home.packages = with pkgs; [
-    starship
-    nix-zsh-completions
-    zsh-completions
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-  ];
 }
