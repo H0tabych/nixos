@@ -42,9 +42,19 @@
   xdg.configFile."nvim".source = ./nvim-config;
 
   programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-  };
+  enable = true;
+  defaultEditor = true;
+  viAlias = true;
+  vimAlias = true;
+  
+  # КРИТИЧЕСКИ ВАЖНО: явно отключаем генерацию конфигурации
+  extraConfig = "";
+  extraLuaConfig = "";
+  extraPackages = [];
+  
+  # Отключаем все встроенные плагины HM
+  withNodeJs = false;
+  withPython3 = false;
+  withRuby = false;
+};
 }
