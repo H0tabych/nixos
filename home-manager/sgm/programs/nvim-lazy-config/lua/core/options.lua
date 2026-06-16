@@ -17,14 +17,8 @@ vim.opt.timeoutlen = 300
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.clipboard = "unnamedplus"
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.undofile = true
+vim.opt.scrolloff = 8
 
--- Настройки для Lazy.nvim
-local state_dir = vim.fn.stdpath("state") .. "/nvim"
-vim.fn.mkdir(state_dir, "p")
-require("lazy").setup({
-  defaults = {
-    lockfile = state_dir .. "/lazy-lock.json",
-    checker = { enabled = true, notify = false },
-    change_detection = { notify = false },
-  },
-})

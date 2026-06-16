@@ -1,4 +1,6 @@
 -- lua/core/init.lua
+
+-- 1. Bootstrap Lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -9,27 +11,44 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Подключение глобальных опций
+-- 2. Подключение глобальных опций
 require("core.options")
 
--- Загрузка плагинов по категориям
-require("plugins.lsp")
---require("plugins.dap")
---require("plugins.telescope")
---require("plugins.treesitter")
---require("plugins.ui")
+-- 3. Загрузка плагинов через Lazy.nvim
+-- ПРАВИЛЬНЫЙ СИНТАКСИС: первый аргумент - список плагинов, второй - опции
+require("lazy").setup({
+  -- Список плагинов (импорты из директории plugins/)
+  { import = "plugins" },
+}, {
+  -- Опции Lazy.nvim (второй аргумент)
+  defaults = {
+    lazy = false, -- все плагины НЕ ленивые по умолчанию
+  },
+  -- ✅ ИСПРАВЛЕННЫЙ путь (без дублирования nvim)
+  lockfile = vim.fn.stdpath("state") .. "/lazy-lock.json",
+  checker = {
+    enabled = true,
+    notify = false,
+  },
+  change_detection = {
+    notify = false,
+  },
+  ui = {
+    border = "rounded",
+  },
+})
 
--- Загрузка конфигурации поведения
-require("config.lsp")
---require("config.dap")
---require("config.telescope")
+-- 4. Загрузка конфигурации поведения
+pcall(require, "config.lsp")
+--pcalil(require, "config.dap")
+--pcall(require, "config.telescope")
 
--- Загрузка горячих клавиш
-require("mappings.lsp")
---require("mappings.dap")
---require("mappings.telescope")
---require("mappings.treesitter")
+-- 5. Загрузка горячих клавиш
+pcall(require, "mappings.lsp")
+--pcall(require, "mappings.dap")
+--pcall(require, "mappings.telescope")
+--pcall(require, "mappings.treesitter")
 
--- Загрузка глобальных привязок
-require("keymaps.normal")
---require("keymaps.visual")
+-- 6. Загрузка глобальных привязок
+pcall(require, "keymaps.normal")
+--pcall(require, "keymaps.visual")
