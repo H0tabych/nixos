@@ -26,7 +26,7 @@
   imports = [
     ./programs/git.nix
     ./programs/zsh.nix
-    ./programs/nvim.nix
+    ./programs/nvim-lazy.nix
     ./programs/foot.nix
     ./programs/theming.nix
     ./programs/yazi.nix
