@@ -1,30 +1,5 @@
 -- lua/plugins/ui.lua
 return {
-  -- Цветовая схема
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    lazy = false,
-    opts = {
-      flavour = "mocha",
-      transparent_background = false,
-      integrations = {
-        treesitter = true,
-        native_lsp = { enabled = true },
-        telescope = true,
-        nvimtree = true,
-        mason = true,
-        dap = { enabled = true, enable_ui = true },
-        lualine = true,
-      },
-    },
-    config = function(_, opts)
-      require("catppuccin").setup(opts)
-      vim.cmd.colorscheme("catppuccin")
-    end,
-  },
-
   -- Иконки
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
@@ -71,43 +46,68 @@ return {
     },
   },
 
-    -- Status line
-  {
-    "nvim-lualine/lualine.nvim",
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-      "catppuccin/nvim", -- Зависимость для загрузки плагина
+  -- Status line
+{
+  "nvim-lualine/lualine.nvim",
+  dependencies = {
+    "nvim-tree/nvim-web-devicons",
+    "catppuccin/nvim", -- Зависимость для загрузки
+  },
+  -- ❌ УДАЛЯЕМ event = "VeryLazy"
+  -- Мы будем управлять загрузкой вручную
+  config = function(_, opts)
+    -- 1. Безопасная загрузка catppuccin
+    local ok, catppuccin = pcall(require, "catppuccin")
+    if not ok then
+      vim.notify("Failed to load catppuccin theme", vim.log.levels.ERROR)
+      return
+    end
+
+    -- 2. Явная инициализация catppuccin с поддержкой lualine
+    catppuccin.setup({
+      flavour = "mocha",
+      transparent_background = false,
+      integrations = {
+        treesitter = true,
+        native_lsp = { enabled = true },
+        telescope = true,
+        nvimtree = true,
+        mason = true,
+        dap = { enabled = true, enable_ui = true },
+        lualine = true, -- Ключевая опция для интеграции
+      },
+    })
+
+    -- 3. Теперь, когда catppuccin гарантированно готов, инициализируем lualine
+    local ok, lualine = pcall(require, "lualine")
+    if not ok then
+      vim.notify("Failed to load lualine", vim.log.levels.ERROR)
+      return
+    end
+
+    -- 4. Выполняем setup с явным указанием темы
+    lualine.setup(opts)
+  end,
+  opts = {
+    options = {
+      theme = "catppuccin",
+      --component_separators = { left = "\ue0b1", right = "\ue0b3" },
+      --section_separators = { left = "\ue0b0", right = "\ue0b2" },
+      globalstatus = true,
+      disabled_filetypes = {
+        statusline = { "NvimTree", "lazy", "dap-repl", "dapui_" },
+      },
     },
-    event = "VeryLazy",
-    -- ✅ ЯВНАЯ КОНФИГУРАЦИЯ для устранения гонки условий
-    config = function(_, opts)
-      -- 1. Гарантируем, что catppuccin полностью инициализирован 
-      -- и зарегистрировал свою тему в lualine до вызова lualine.setup()
-      require("catppuccin").setup()
-      
-      -- 2. Инициализируем lualine с переданными opts
-      require("lualine").setup(opts)
-    end,
-    opts = {
-      options = {
-        theme = "catppuccin",
-        component_separators = { left = "", right = "" },
-        section_separators = { left = "", right = "" },
-        globalstatus = true,
-        disabled_filetypes = {
-          statusline = { "NvimTree", "lazy", "dap-repl", "dapui_" },
-        },
-      },
-      sections = {
-        lualine_a = { "mode" },
-        lualine_b = { "branch", "diff", "diagnostics" },
-        lualine_c = { { "filename", path = 1 } },
-        lualine_x = { "encoding", "fileformat", "filetype" },
-        lualine_y = { "progress" },
-        lualine_z = { "location" },
-      },
+    sections = {
+      lualine_a = { "mode" },
+      lualine_b = { "branch", "diff", "diagnostics" },
+      lualine_c = { { "filename", path = 1 } },
+      lualine_x = { "encoding", "fileformat", "filetype" },
+      lualine_y = { "progress" },
+      lualine_z = { "location" },
     },
   },
+},
 
   -- Buffer line (табы)
   {

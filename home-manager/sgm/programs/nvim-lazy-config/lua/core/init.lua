@@ -38,17 +38,20 @@ require("lazy").setup({
   },
 })
 
--- 4. Загрузка конфигурации поведения
+-- 4. Явная загрузка UI-модулей для предотвращения гонок условий
+pcall(require, "plugins.ui")
+
+-- 5. Загрузка конфигурации поведения
 pcall(require, "config.lsp")
 pcall(require, "config.dap")
 pcall(require, "config.telescope")
 
--- 5. Загрузка горячих клавиш
+-- 6. Загрузка горячих клавиш
 pcall(require, "mappings.lsp")
 pcall(require, "mappings.dap")
 pcall(require, "mappings.telescope")
 pcall(require, "mappings.treesitter")
 
--- 6. Загрузка глобальных привязок
+-- 7. Загрузка глобальных привязок
 pcall(require, "keymaps.normal")
 pcall(require, "keymaps.visual")
