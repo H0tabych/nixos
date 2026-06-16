@@ -40,15 +40,15 @@ require("lazy").setup({
 
 -- 4. Загрузка конфигурации поведения
 pcall(require, "config.lsp")
---pcalil(require, "config.dap")
---pcall(require, "config.telescope")
+pcall(require, "config.dap")
+pcall(require, "config.telescope")
 
 -- 5. Загрузка горячих клавиш
 pcall(require, "mappings.lsp")
---pcall(require, "mappings.dap")
---pcall(require, "mappings.telescope")
---pcall(require, "mappings.treesitter")
+pcall(require, "mappings.dap")
+pcall(require, "mappings.telescope")
+pcall(require, "mappings.treesitter")
 
 -- 6. Загрузка глобальных привязок
 pcall(require, "keymaps.normal")
---pcall(require, "keymaps.visual")
+pcall(require, "keymaps.visual")
