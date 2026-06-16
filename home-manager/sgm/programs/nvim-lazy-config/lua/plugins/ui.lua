@@ -71,14 +71,23 @@ return {
     },
   },
 
-  -- Status line
+    -- Status line
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { 
-        "nvim-tree/nvim-web-devicons",
-        "catppuccin/nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "catppuccin/nvim", -- Зависимость для загрузки плагина
     },
     event = "VeryLazy",
+    -- ✅ ЯВНАЯ КОНФИГУРАЦИЯ для устранения гонки условий
+    config = function(_, opts)
+      -- 1. Гарантируем, что catppuccin полностью инициализирован 
+      -- и зарегистрировал свою тему в lualine до вызова lualine.setup()
+      require("catppuccin").setup()
+      
+      -- 2. Инициализируем lualine с переданными opts
+      require("lualine").setup(opts)
+    end,
     opts = {
       options = {
         theme = "catppuccin",
@@ -86,7 +95,7 @@ return {
         section_separators = { left = "", right = "" },
         globalstatus = true,
         disabled_filetypes = {
-          statusline = { "NvimTree", "lazy" },
+          statusline = { "NvimTree", "lazy", "dap-repl", "dapui_" },
         },
       },
       sections = {
