@@ -16,6 +16,7 @@ return {
         nvimtree = true,
         mason = true,
         dap = { enabled = true, enable_ui = true },
+        lualine = true,
       },
     },
     config = function(_, opts)
@@ -73,7 +74,10 @@ return {
   -- Status line
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { 
+        "nvim-tree/nvim-web-devicons",
+        "catppuccin/nvim",
+    },
     event = "VeryLazy",
     opts = {
       options = {
