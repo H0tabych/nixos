@@ -2,7 +2,7 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
+    branch = "0.1.x", -- Используем стабильную ветку
     dependencies = {
       "nvim-lua/plenary.nvim",
       {
@@ -25,7 +25,60 @@ return {
       { "<leader>fS", "<cmd>Telescope lsp_workspace_symbols<cr>", desc = "Workspace Symbols" },
     },
     config = function()
-      require("config.telescope").setup()
+      local telescope = require("telescope")
+      local actions = require("telescope.actions")
+
+      telescope.setup({
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-u>"] = false,
+              ["<C-d>"] = false,
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+              ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+            },
+          },
+          file_ignore_patterns = {
+            "node_modules",
+            ".git/",
+            "target/",
+            "dist/",
+            "build/",
+          },
+          layout_strategy = "horizontal",
+          layout_config = {
+            horizontal = {
+              prompt_position = "top",
+              preview_width = 0.55,
+              results_width = 0.8,
+            },
+            width = 0.87,
+            height = 0.80,
+            preview_cutoff = 120,
+          },
+          -- ✅ ИСПРАВЛЕНИЕ: Отключаем treesitter-based preview для избежания ошибки ft_to_lang
+          preview = {
+            treesitter = false,
+          },
+        },
+        pickers = {
+          find_files = {
+            theme = "dropdown",
+            previewer = false,
+          },
+          live_grep = {
+            theme = "ivy",
+          },
+          buffers = {
+            theme = "dropdown",
+            previewer = false,
+          },
+        },
+      })
+
+      -- Загрузить fzf extension если доступен
+      pcall(telescope.load_extension, "fzf")
     end,
   },
 }

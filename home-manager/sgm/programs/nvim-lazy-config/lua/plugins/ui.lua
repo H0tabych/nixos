@@ -1,9 +1,35 @@
 -- lua/plugins/ui.lua
 return {
-  -- Иконки
+  -- 1. Цветовая схема (ПЕРВЫЙ плагин, загружается немедленно)
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      flavour = "mocha",
+      transparent_background = false,
+      integrations = {
+        treesitter = true,
+        native_lsp = { enabled = true },
+        telescope = true,
+        nvimtree = true,
+        mason = true,
+        dap = { enabled = true, enable_ui = true },
+        lualine = true,
+        which_key = true,
+      },
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+    end,
+  },
+
+  -- 2. Иконки
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
-  -- Дерево файлов
+  -- 3. Дерево файлов
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -46,70 +72,54 @@ return {
     },
   },
 
-  -- Status line
-{
-  "nvim-lualine/lualine.nvim",
-  dependencies = {
-    "nvim-tree/nvim-web-devicons",
-    "catppuccin/nvim", -- Зависимость для загрузки
-  },
-  -- ❌ УДАЛЯЕМ event = "VeryLazy"
-  -- Мы будем управлять загрузкой вручную
-  config = function(_, opts)
-    -- 1. Безопасная загрузка catppuccin
-    local ok, catppuccin = pcall(require, "catppuccin")
-    if not ok then
-      vim.notify("Failed to load catppuccin theme", vim.log.levels.ERROR)
-      return
-    end
+  -- 4. Status line
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "catppuccin/nvim",
+    },
+    config = function(_, opts)
+      -- Гарантируем, что catppuccin загружен
+      local ok, catppuccin = pcall(require, "catppuccin")
+      if ok then
+        catppuccin.setup({
+          flavour = "mocha",
+          integrations = { lualine = true },
+        })
+      end
 
-    -- 2. Явная инициализация catppuccin с поддержкой lualine
-    catppuccin.setup({
-      flavour = "mocha",
-      transparent_background = false,
-      integrations = {
-        treesitter = true,
-        native_lsp = { enabled = true },
-        telescope = true,
-        nvimtree = true,
-        mason = true,
-        dap = { enabled = true, enable_ui = true },
-        lualine = true, -- Ключевая опция для интеграции
+      -- Загружаем lualine
+      local ok_lualine, lualine = pcall(require, "lualine")
+      if not ok_lualine then
+        vim.notify("Failed to load lualine", vim.log.levels.ERROR)
+        return
+      end
+
+      lualine.setup(opts)
+    end,
+    opts = {
+      options = {
+        theme = "catppuccin",
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+        globalstatus = true,
+        disabled_filetypes = {
+          statusline = { "NvimTree", "lazy", "dap-repl", "dapui_" },
+        },
       },
-    })
-
-    -- 3. Теперь, когда catppuccin гарантированно готов, инициализируем lualine
-    local ok, lualine = pcall(require, "lualine")
-    if not ok then
-      vim.notify("Failed to load lualine", vim.log.levels.ERROR)
-      return
-    end
-
-    -- 4. Выполняем setup с явным указанием темы
-    lualine.setup(opts)
-  end,
-  opts = {
-    options = {
-      theme = "catppuccin",
-      --component_separators = { left = "\ue0b1", right = "\ue0b3" },
-      --section_separators = { left = "\ue0b0", right = "\ue0b2" },
-      globalstatus = true,
-      disabled_filetypes = {
-        statusline = { "NvimTree", "lazy", "dap-repl", "dapui_" },
+      sections = {
+        lualine_a = { "mode" },
+        lualine_b = { "branch", "diff", "diagnostics" },
+        lualine_c = { { "filename", path = 1 } },
+        lualine_x = { "encoding", "fileformat", "filetype" },
+        lualine_y = { "progress" },
+        lualine_z = { "location" },
       },
     },
-    sections = {
-      lualine_a = { "mode" },
-      lualine_b = { "branch", "diff", "diagnostics" },
-      lualine_c = { { "filename", path = 1 } },
-      lualine_x = { "encoding", "fileformat", "filetype" },
-      lualine_y = { "progress" },
-      lualine_z = { "location" },
-    },
   },
-},
 
-  -- Buffer line (табы)
+  -- 5. Buffer line (табы)
   {
     "akinsho/bufferline.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -125,7 +135,7 @@ return {
     },
   },
 
-  -- Indent guides
+  -- 6. Indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
@@ -146,7 +156,7 @@ return {
     },
   },
 
-  -- Which-key (подсказки горячих клавиш)
+  -- 7. Which-key (подсказки горячих клавиш)
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -159,11 +169,13 @@ return {
         { "<leader>d", group = "Debug" },
         { "<leader>f", group = "Find" },
         { "<leader>g", group = "Git" },
+        { "<leader>t", group = "Tree" },
+        { "<leader>x", group = "Diagnostics" },
       },
     },
   },
 
-  -- Comment
+  -- 8. Comment
   {
     "numToStr/Comment.nvim",
     event = "VeryLazy",
@@ -179,7 +191,7 @@ return {
     },
   },
 
-  -- Autopairs
+  -- 9. Autopairs
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
@@ -200,7 +212,7 @@ return {
     end,
   },
 
-  -- Git signs
+  -- 10. Git signs
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -208,8 +220,8 @@ return {
       signs = {
         add = { text = "▎" },
         change = { text = "▎" },
-        delete = { text = "" },
-        topdelete = { text = "" },
+        delete = { text = "" },
+        topdelete = { text = "" },
         changedelete = { text = "▎" },
       },
       on_attach = function(bufnr)
@@ -230,7 +242,7 @@ return {
     },
   },
 
-  -- Trouble (красивый список ошибок)
+  -- 11. Trouble (красивый список ошибок)
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
