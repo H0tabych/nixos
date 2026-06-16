@@ -179,7 +179,10 @@ return {
   -- 5. None-ls (Форматирование и линтинг)
   {
     "nvimtools/none-ls.nvim",
-    dependencies = { "nvim-lspconfig" },
+    dependencies = { 
+        "nvim-lspconfig", 
+    "nvim-lua/plenary.nvim",
+    },
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local null_ls = require("null-ls")
