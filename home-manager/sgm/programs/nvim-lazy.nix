@@ -2,19 +2,45 @@
 
 {
   home.packages = with pkgs; [
-    # Базовые утилиты
-    git ripgrep fd gcc gnumake curl wget unzip gnutar tree-sitter
+    # Базовые утилиты для плагинов
+    git
+    ripgrep
+    fd
+    gcc
+    gnumake
+    curl
+    wget
+    unzip
+    gnutar
+    tree-sitter
 
-    # LSP серверы (установлены через Nix)
-    pyright nil json-language-server yaml-language-server
-    bash-language-server sqls typescript-language-server
-    html-css-class-completion clang-tools stylua nixfmt-rfc-style
+    # === LSP СЕРВЕРЫ (правильные имена для nixpkgs 25.11) ===
+    pyright                                    # Python
+    nil                                        # Nix
+    nodePackages.vscode-langservers-extracted  # JSON, HTML, CSS, ESLint (один пакет для всех)
+    nodePackages.yaml-language-server          # YAML
+    nodePackages.bash-language-server          # Bash
+    sqls                                       # SQL
+    nodePackages.typescript-language-server    # TypeScript/JavaScript
+    lua-language-server                        # Lua
+    clang-tools                                # C/C++ (clangd)
 
-    # Отладчики
-    python311Packages.debugpy lldb
+    # === ФОРМАТТЕРЫ И ЛИНТЕРЫ (для none-ls) ===
+    mypy                                       # Python type checker
+    black                                      # Python formatter
+    isort                                      # Python import sorter
+    stylua                                     # Lua formatter
+    nixfmt-rfc-style                           # Nix formatter
 
-    # Зависимости для Mason (на случай, если понадобится)
-    nodejs go rustc cargo
+    # === ОТЛАДЧИКИ (DAP) ===
+    python311Packages.debugpy                  # Python отладчик
+    lldb                                       # C/C++ отладчик
+
+    # === ЗАВИСИМОСТИ ДЛЯ MASON (опционально) ===
+    nodejs
+    go
+    rustc
+    cargo
   ];
 
   # Связываем портативную конфигурацию
