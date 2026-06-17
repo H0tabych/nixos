@@ -1,80 +1,62 @@
 -- lua/core/options.lua
 -- ============================================================
--- БАЗОВЫЕ НАСТРОЙКИ NEOVIM
+-- БАЗОВЫЕ НАСТРОЙКИ NEOVIM (Neovim 0.11+ compatible)
 -- ============================================================
--- Эти настройки не зависят от плагинов и работают везде.
--- Переносимы между дистрибутивами.
 
--- === Лидер-клавиша ===
--- Должна быть установлена ДО загрузки плагинов, чтобы они могли
--- использовать её в своих маппингах
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- === Отключение совместимости с Vi ===
-vim.o.compatible = false
-
 -- === UI ===
-vim.o.number = true                 -- Номера строк
-vim.o.relativenumber = true         -- Относительные номера
-vim.o.signcolumn = "yes"            -- Всегда показывать колонку знаков
-vim.o.cursorline = true             -- Подсветка текущей строки
-vim.o.cursorlineopt = "number"      -- Подсветка только номера
-vim.o.termguicolors = true          -- 24-бит цвета
-vim.o.pumheight = 10                -- Высота popup menu
-vim.o.showmode = false              -- Не показывать режим (lualine покажет)
-vim.o.cmdheight = 1                 -- Высота командной строки
-vim.o.scrolloff = 8                 -- Отступ при скролле
-vim.o.sidescrolloff = 8
-vim.o.splitbelow = true             -- Новые сплиты снизу
-vim.o.splitright = true             -- Новые сплиты справа
-vim.o.wrap = false                  -- Не переносить строки
-vim.o.linebreak = true              -- Но переносить по словам (если wrap=true)
-vim.o.conceallevel = 0              -- Показывать всё явно
-vim.o.signcolumn = "yes"            -- Всегда показывать signcolumn
-vim.o.laststatus = 3                -- Глобальный статус-бар (для lualine)
-vim.o.showtabline = 1               -- Показывать табы только если >1
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.signcolumn = "yes"
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
+vim.opt.termguicolors = true
+vim.opt.pumheight = 10
+vim.opt.showmode = false
+vim.opt.cmdheight = 1
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.wrap = false
+vim.opt.linebreak = true
+vim.opt.conceallevel = 0
+vim.opt.laststatus = 3
+vim.opt.showtabline = 1
 
 -- === Поиск ===
-vim.o.hlsearch = true               -- Подсвечивать результаты поиска
-vim.o.incsearch = true              -- Искать по мере ввода
-vim.o.ignorecase = true             -- Игнорировать регистр...
-vim.o.smartcase = true              -- ...если нет заглавных букв
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
--- === Отступы и табуляция ===
-vim.o.tabstop = 4                   -- Таб = 4 пробела
-vim.o.shiftwidth = 4                -- Отступ при >> и <<
-vim.o.expandtab = true              -- Табы → пробелы
-vim.o.smartindent = true            -- Умные отступы
-vim.o.autoindent = true             -- Наследовать отступ от предыдущей строки
-vim.o.breakindent = true            -- Сохранять отступ при переносе
+-- === Отступы ===
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+vim.opt.breakindent = true
 
 -- === История и отмена ===
-vim.o.history = 10000               -- Размер истории команд
-vim.o.undofile = true               -- Сохранять undo между сессиями
-vim.o.undolevels = 10000            -- Глубина undo
-vim.o.updatetime = 250              -- Быстрее обновлять (для CursorHold)
-vim.o.timeoutlen = 300              -- Время ожидания комбинаций клавиш
+vim.opt.history = 10000
+vim.opt.undofile = true
+vim.opt.undolevels = 10000
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
 
 -- === Буфер обмена (Wayland + X11) ===
--- "unnamedplus" — использовать системный буфер обмена (+ регистр)
--- В Wayland это работает через wl-copy/wl-paste (из wl-clipboard)
--- В X11 — через xclip/xsel
-vim.o.clipboard = "unnamedplus"
-
--- === Производительность ===
-vim.o.lazyredraw = false            -- Не отключать redraw (современные терминалы быстрые)
-vim.o.synmaxcol = 240               -- Ограничить подсветку синтаксиса по длине строки
-vim.o.ttyfast = true                -- Оптимизация для быстрых терминалов
+vim.opt.clipboard = "unnamedplus"
 
 -- === Файлы и бэкапы ===
-vim.o.backup = false                -- Не создавать бэкапы
-vim.o.writebackup = false           -- Не создавать бэкапы при записи
-vim.o.swapfile = false              -- Не создавать swap-файлы
-vim.o.autoread = true               -- Автоматически перечитывать изменённые файлы
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.swapfile = false
+vim.opt.autoread = true
 
 -- === Автокоманды ===
--- Подсветка при yank (копировании)
 local yank_group = vim.api.nvim_create_augroup("HighlightYank", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = yank_group,
@@ -83,7 +65,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Автоматически возвращаться к последней позиции в файле
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -94,28 +75,14 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- Убирать trailing whitespace при сохранении (опционально)
--- vim.api.nvim_create_autocmd("BufWritePre", {
---   pattern = "*",
---   command = "%s/\\s\\+$//e",
--- })
-
--- Закрытие некоторых окон по q
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "qf", "help", "man", "notify", "lspinfo",
-    "PlenaryTestPopup", "startuptime",
-  },
+  pattern = { "qf", "help", "man", "notify", "lspinfo", "startuptime" },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", {
-      buffer = event.buf,
-      silent = true,
-    })
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
   end,
 })
 
--- Автоматически открывать help в вертикальном сплите
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "help",
   command = "wincmd L",
