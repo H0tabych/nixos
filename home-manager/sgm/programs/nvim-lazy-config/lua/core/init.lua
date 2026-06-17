@@ -42,6 +42,7 @@ end
 -- utils.safe_require("config.telescope")
 
 -- 5. Загрузка горячих клавиш плагинов
+utils.safe_require("mappings.ui")
 -- utils.safe_require("mappings.lsp")
 -- utils.safe_require("mappings.dap")
 -- utils.safe_require("mappings.telescope")
