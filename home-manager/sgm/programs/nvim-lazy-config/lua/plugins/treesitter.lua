@@ -22,9 +22,14 @@ return {
         additional_vim_regex_highlighting = false,
       },
       indent = { enable = true },
-      -- ✅ УБИРАЕМ keymaps отсюда — они будут в mappings/treesitter.lua
+      -- ✅ ВОЗВРАЩАЕМ keymaps сюда — это правильный способ настройки
       incremental_selection = {
         enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          node_decremental = "<bs>",
+        },
       },
     },
   },
@@ -54,12 +59,34 @@ return {
         select = {
           enable = true,
           lookahead = true,
-          -- ✅ УБИРАЕМ keymaps отсюда — они будут в mappings/treesitter.lua
+          -- ✅ ВОЗВРАЩАЕМ keymaps сюда
+          keymaps = {
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
+          },
         },
         move = {
           enable = true,
           set_jumps = true,
-          -- ✅ УБИРАЕМ keymaps отсюда — они будут в mappings/treesitter.lua
+          -- ✅ ВОЗВРАЩАЕМ keymaps сюда
+          goto_next_start = {
+            ["]m"] = "@function.outer",
+            ["]]"] = "@class.outer",
+          },
+          goto_next_end = {
+            ["]M"] = "@function.outer",
+            ["]["] = "@class.outer",
+          },
+          goto_previous_start = {
+            ["[m"] = "@function.outer",
+            ["[["] = "@class.outer",
+          },
+          goto_previous_end = {
+            ["[M"] = "@function.outer",
+            ["[]"] = "@class.outer",
+          },
         },
       },
     },
