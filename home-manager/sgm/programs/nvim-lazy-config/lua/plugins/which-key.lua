@@ -7,7 +7,6 @@ return {
       "nvim-tree/nvim-web-devicons",
       "echasnovski/mini.icons",
     },
-    -- ✅ Обновлённый API (без deprecated опций)
     opts = {
       plugins = {
         marks = true,
@@ -51,7 +50,6 @@ return {
           F12 = "󱊶",
         },
       },
-      -- ✅ Новый API для замены клавиш (вместо key_labels)
       replace = {
         key = {
           function(key)
@@ -59,12 +57,10 @@ return {
           end,
         },
       },
-      -- ✅ Новый API для маппингов окна (вместо popup_mappings)
       keys = {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
       },
-      -- Окно
       win = {
         border = "rounded",
         no_overlap = true,
@@ -73,26 +69,34 @@ return {
         title_pos = "center",
         zindex = 1000,
       },
-      -- Layout
       layout = {
         height = { min = 4, max = 25 },
         width = { min = 20, max = 50 },
         spacing = 3,
         align = "left",
       },
-      -- Показывать подсказки
       show_help = true,
       show_keys = true,
-      -- Задержка перед показом (мс)
       delay = function(ctx)
         return 200
       end,
-      -- Sort
       sort = { "local", "order", "group", "alphanum", "mod" },
-      -- Expand
       expand = 0,
+      spec = {
+          { "<leader>e", group = "Explorer" },
+          { "<leader>f", group = "Find" },
+          { "<leader>g", group = "Git" },
+          { "<leader>gh", group = "Hunks" },
+          { "<leader>gd", group = "Diffview" },
+          { "<leader>gb", group = "Blame" },
+          { "<leader>x", group = "Diagnostics/Todo" },
+          { "<leader>b", group = "Buffer" },
+          { "<leader>w", group = "Window" },
+          { "<leader>T", group = "Terminal" },
+          { "<leader>c", group = "Config" },
+          { "<C-Space>", desc = "Trigger completion" },
+        },
     },
-    -- ✅ Убираем дублирование — группы определяются только в mappings/
     config = function(_, opts)
       require("which-key").setup(opts)
     end,

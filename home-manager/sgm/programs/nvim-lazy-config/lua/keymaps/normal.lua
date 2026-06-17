@@ -5,22 +5,6 @@
 
 local map = require("core.utils").map
 
--- === Which-Key: Определение групп ===
--- Эти группы будут показаны в which-key при нажатии <leader>
-local wk = require("core.utils").safe_require("which-key")
-if wk then
-  wk.add({
-    { "<leader>e", group = "Explorer" },
-    { "<leader>f", group = "Find" },
-    { "<leader>g", group = "Git" },
-    { "<leader>x", group = "Diagnostics" },
-    { "<leader>b", group = "Buffer" },
-    { "<leader>w", group = "Window" },
-    { "<leader>T", group = "Terminal" },
-    { "<leader>c", group = "Config" },
-  })
-end
-
 -- === Навигация между окнами ===
 map("n", "<C-h>", "<C-w>h", { desc = "Window left" })
 map("n", "<C-j>", "<C-w>j", { desc = "Window down" })
