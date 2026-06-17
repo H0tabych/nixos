@@ -73,8 +73,8 @@ return {
           -- Ручной вызов меню
           ["<C-Space>"] = cmp.mapping.complete(),
           -- Прокрутка документации
-          ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-d>"] = cmp.mapping.scroll_docs(4),
+          ["<C-@>"] = cmp.mapping.complete(),
+          ["<C-Space>"] = cmp.mapping.complete(), -- Фоллбэк для терминалов, которые это передают
 
           -- Навигация + работа со сниппетами
           ["<Tab>"] = cmp.mapping(function(fallback)
