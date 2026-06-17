@@ -30,6 +30,20 @@
 
     tree-sitter
 
+     # === LSP серверы ===
+    nil                           # Nix LSP
+    lua-language-server           # Lua LSP
+    nodePackages.vim-language-server  # Vimscript LSP
+
+    # === Форматтеры ===
+    nixfmt                        # Nix форматтер (или nixfmt-rfc-style)
+    stylua                        # Lua форматтер
+
+    # === Линтеры ===
+    statix                        # Nix линтер
+    selene                        # Lua линтер (с поддержкой Neovim API)
+    vint                          # Vimscript линтер
+
     # === Опционально: для будущих этапов ===
     # Эти пакеты понадобятся, когда мы добавим LSP/DAP
     # Пока закомментируем, чтобы не устанавливать лишнее

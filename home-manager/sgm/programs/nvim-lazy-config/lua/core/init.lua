@@ -37,13 +37,13 @@ end
 
 -- 4. Загрузка конфигурации поведения плагинов
 -- (после того, как плагины загружены)
--- utils.safe_require("config.lsp")
+utils.safe_require("config.lsp")
 -- utils.safe_require("config.dap")
 -- utils.safe_require("config.telescope")
 
 -- 5. Загрузка горячих клавиш плагинов
 utils.safe_require("mappings.ui")
--- utils.safe_require("mappings.lsp")
+utils.safe_require("mappings.lsp")
 -- utils.safe_require("mappings.dap")
 utils.safe_require("mappings.telescope")
 utils.safe_require("mappings.git")
