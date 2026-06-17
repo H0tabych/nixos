@@ -36,13 +36,13 @@
     nodePackages.vim-language-server  # Vimscript LSP
 
     # === Форматтеры ===
-    nixfmt                        # Nix форматтер (или nixfmt-rfc-style)
+    nixfmt-rfc-style              # Nix форматтер (или nixfmt-rfc-style)
     stylua                        # Lua форматтер
 
     # === Линтеры ===
     statix                        # Nix линтер
     selene                        # Lua линтер (с поддержкой Neovim API)
-    vint                          # Vimscript линтер
+    vim-vint                          # Vimscript линтер
 
     # === Опционально: для будущих этапов ===
     # Эти пакеты понадобятся, когда мы добавим LSP/DAP
