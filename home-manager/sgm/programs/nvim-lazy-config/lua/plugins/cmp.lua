@@ -71,7 +71,6 @@ return {
           -- Подтверждение выбора
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
           -- Ручной вызов меню
-          ["<C-Space>"] = cmp.mapping.complete(),
           -- Прокрутка документации
           ["<C-@>"] = cmp.mapping.complete(),
           ["<C-Space>"] = cmp.mapping.complete(), -- Фоллбэк для терминалов, которые это передают

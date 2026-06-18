@@ -2,8 +2,6 @@
 -- ============================================================
 -- ГОРЯЧИЕ КЛАВИШИ ДЛЯ GIT
 -- ============================================================
--- Все вызовы require() обёрнуты в функции для ленивой оценки.
--- Это предотвращает ошибки при загрузке до инициализации плагинов.
 
 local map = require("core.utils").map
 
@@ -27,24 +25,53 @@ map("n", "<leader>gdf", "<cmd>DiffviewToggleFiles<cr>", { desc = "Diffview toggl
 map("n", "<leader>gdh", "<cmd>DiffviewFileHistory<cr>", { desc = "Diffview file history" })
 map("n", "<leader>gdH", "<cmd>DiffviewFileHistory %<cr>", { desc = "Diffview file history (current)" })
 
--- === Gitsigns: Hunk-операции (обёрнуто в функции!) ===
+-- === Gitsigns: Hunk-операции (НОВЫЙ API) ===
+-- ✅ ИСПРАВЛЕНО: используем новые функции gitsigns
+
+-- Навигация между hunks
 map("n", "]h", function()
-  if vim.wo.diff then return vim.cmd.normal({ "]c", bang = true }) end
-  require("gitsigns").nav_hunk("next")
+  if vim.wo.diff then
+    vim.cmd.normal({ "]c", bang = true })
+  else
+    require("gitsigns").nav_hunk("next")
+  end
 end, { desc = "Next hunk" })
 
 map("n", "[h", function()
-  if vim.wo.diff then return vim.cmd.normal({ "[c", bang = true }) end
-  require("gitsigns").nav_hunk("prev")
+  if vim.wo.diff then
+    vim.cmd.normal({ "[c", bang = true })
+  else
+    require("gitsigns").nav_hunk("prev")
+  end
 end, { desc = "Previous hunk" })
 
-map("n", "<leader>ghs", function() require("gitsigns").stage_hunk() end, { desc = "Stage hunk" })
-map("n", "<leader>ghr", function() require("gitsigns").reset_hunk() end, { desc = "Reset hunk" })
-map("n", "<leader>ghS", function() require("gitsigns").stage_buffer() end, { desc = "Stage buffer" })
-map("n", "<leader>ghR", function() require("gitsigns").reset_buffer() end, { desc = "Reset buffer" })
-map("n", "<leader>ghu", function() require("gitsigns").undo_stage_hunk() end, { desc = "Undo stage hunk" })
-map("n", "<leader>ghp", function() require("gitsigns").preview_hunk() end, { desc = "Preview hunk" })
+-- ✅ ИСПРАВЛЕНО: stage_hunk теперь принимает опции
+map("n", "<leader>ghs", function()
+  require("gitsigns").stage_hunk()
+end, { desc = "Stage hunk" })
 
+map("n", "<leader>ghr", function()
+  require("gitsigns").reset_hunk()
+end, { desc = "Reset hunk" })
+
+map("n", "<leader>ghS", function()
+  require("gitsigns").stage_buffer()
+end, { desc = "Stage buffer" })
+
+map("n", "<leader>ghR", function()
+  require("gitsigns").reset_buffer()
+end, { desc = "Reset buffer" })
+
+map("n", "<leader>ghu", function()
+  require("gitsigns").undo_stage_hunk()
+end, { desc = "Undo stage hunk" })
+
+-- ✅ ИСПРАВЛЕНО: preview_hunk заменён на preview_hunk_inline
+map("n", "<leader>ghp", function()
+  require("gitsigns").preview_hunk_inline()
+end, { desc = "Preview hunk" })
+
+-- Визуальный режим: stage/reset выделенный диапазон
 map("v", "<leader>ghs", function()
   require("gitsigns").stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
 end, { desc = "Stage hunk (visual)" })
@@ -53,9 +80,23 @@ map("v", "<leader>ghr", function()
   require("gitsigns").reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
 end, { desc = "Reset hunk (visual)" })
 
--- === Gitsigns: Blame и другие ===
-map("n", "<leader>gbl", function() require("gitsigns").blame_line() end, { desc = "Blame line" })
-map("n", "<leader>gbL", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Blame line (full)" })
-map("n", "<leader>gbd", function() require("gitsigns").toggle_current_line_blame() end, { desc = "Toggle line blame" })
-map("n", "<leader>gD", function() require("gitsigns").diffthis() end, { desc = "Diff this" })
-map("n", "<leader>gtd", function() require("gitsigns").toggle_deleted() end, { desc = "Toggle deleted" })
+-- === Gitsigns: Blame и другие операции ===
+map("n", "<leader>gbl", function()
+  require("gitsigns").blame_line()
+end, { desc = "Blame line" })
+
+map("n", "<leader>gbL", function()
+  require("gitsigns").blame_line({ full = true })
+end, { desc = "Blame line (full)" })
+
+map("n", "<leader>gbd", function()
+  require("gitsigns").toggle_current_line_blame()
+end, { desc = "Toggle line blame" })
+
+map("n", "<leader>gD", function()
+  require("gitsigns").diffthis()
+end, { desc = "Diff this" })
+
+map("n", "<leader>gtd", function()
+  require("gitsigns").toggle_deleted()
+end, { desc = "Toggle deleted" })

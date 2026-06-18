@@ -11,7 +11,7 @@ function M.setup()
 
   -- === On_attach: хоткеи LSP ===
   -- Эта функция вызывается при подключении LSP к буферу
-  local on_attach = function(client, bufnr)
+  local on_attach = function(_, bufnr)
     -- Загружаем хоткеи из mappings/lsp.lua
     require("mappings.lsp").setup(bufnr)
   end
