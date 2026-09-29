@@ -28,6 +28,8 @@
     ../../modules/sddm
     ../../modules/gaming
 
+    ../../modules/networking/xray-client.nix
+
     # Audio modules
     ../../modules/audio/pipewire.nix
     ../../modules/audio/bluetooth.nix

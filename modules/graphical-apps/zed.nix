@@ -2,6 +2,7 @@
 {pkgs, ...}: {
   # Устанавливаем Zed
   environment.systemPackages = with pkgs; [
+  jetbrains.pycharm-community
     zed-editor
   ];
 

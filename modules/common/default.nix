@@ -42,7 +42,7 @@
   users.users.${user} = {
     isNormalUser = true;
     description = "Main user";
-    extraGroups = ["wheel" "networkmanager" "video" "audio"];
+    extraGroups = ["wheel" "networkmanager" "video" "audio" "docker"];
     shell = pkgs.zsh;
   };
 
