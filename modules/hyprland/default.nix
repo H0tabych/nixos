@@ -37,7 +37,7 @@
   # --- Переменные окружения для Wayland ---
   environment.variables = {
     # Для Wayland-приложений
-    QT_QPA_PLATFORM = lib.mkDefault "wayland;xcb";
+    QT_QPA_PLATFORM = lib.mkDefault "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     # SDL_VIDEODRIVER = lib.mkDefault "wayland";
     CLUTTER_BACKEND = "wayland";
