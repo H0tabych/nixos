@@ -26,5 +26,7 @@
     # Laptop utilities
     brightnessctl
     acpi
+
+    kitty
   ];
 }

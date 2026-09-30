@@ -1,27 +1,27 @@
-{ config, pkgs, lib, ... }: {
+# ~/nixos-config/home-manager/sgm/hyprland.nix
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "lua"; # Используем новый стандарт 26.05
-    package = null;
-    portalPackage = null;
-    
-    # Отключаем интеграцию systemd в HM, так как сессией управляет UWSM на уровне системы
-    systemd.enable = false; 
+    configType = "lua"; # Используем современный Lua-генератор Home Manager
+    systemd.enable = false; # КРИТИЧНО: отключаем HM systemd, так как используем UWSM на уровне системы
 
     settings = {
       env = [
-        "AQ_DRM_DEVICES,/dev/dri/card1:/dev/dri/card0"
+        "AQ_DRM_DEVICES,/dev/dri/by-path/pci-0000:01:00.0-card:/dev/dri/by-path/pci-0000:00:02.0-card" # Более надёжный путь, чем card1:card0
         "GBM_BACKEND,nvidia-drm"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,1"
         "HYPRCURSOR_SIZE,16"
         "XCURSOR_SIZE,16"
         "NIXOS_OZONE_WL,1"
-        # Прокси с корректным no_proxy для локальных сокетов (важно для DBus/Wayland!)
         "http_proxy,http://127.0.0.1:10809"
         "https_proxy,http://127.0.0.1:10809"
-        "all_proxy,socks5h://127.0.0.1:10808"
-        "no_proxy,localhost,127.0.0.1,::1,.local,/run/user,/tmp"
+        "no_proxy,localhost,127.0.0.1,::1,.local,/run/user,/tmp" # Важно для работы локального DBus/Wayland
       ];
 
       general = {
@@ -73,19 +73,18 @@
           "fadeOut, 1, 1.46, almostLinear"
           "fade, 1, 3.03, quick"
           "layers, 1, 3.81, easeOutQuint"
-          "layersIn, 1, 4, easeOutQuint, fade"
-          "layersOut, 1, 1.5, linear, fade"
-          "fadeLayersIn, 1, 1.79, almostLinear"
-          "fadeLayersOut, 1, 1.39, almostLinear"
           "workspaces, 1, 1.94, almostLinear, fade"
-          "workspacesIn, 1, 1.21, almostLinear, fade"
-          "workspacesOut, 1, 1.94, almostLinear, fade"
-          "zoomFactor, 1, 7, quick"
         ];
       };
 
-      dwindle = { preserve_split = true; };
-      master = { new_status = "master"; };
+      dwindle = {
+        preserve_split = true;
+      };
+
+      master = {
+        new_status = "master";
+      };
+
       misc = {
         force_default_wallpaper = -1;
         disable_hyprland_logo = false;
@@ -96,28 +95,30 @@
       "$fileManager" = "yazi";
       "$browser" = "firefox";
 
-      # Генератор Lua в HM 26.05 отлично работает со списками строк
-      bind = [
-        "$mod, C, killactive"
-        "$mod, V, togglefloating"
-        "$mod SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy" # Исправлен дубликат
-        "$mod, Q, exit"
-        "$mod, Return, exec, $terminal"
-        "$mod, B, exec, $browser"
-        "$mod, F, exec, $terminal -e $fileManager"
-        "$mod, h, movefocus, l"
-        "$mod, l, movefocus, r"
-        "$mod, k, movefocus, u"
-        "$mod, j, movefocus, d"
-        ", Print, exec, ~/.local/bin/screenshot"
-        "$mod, R, exec, rofi -show drun -show-icons"
-        "$mod, I, exec, swayimg"
-      ] ++ (builtins.concatLists (builtins.genList (i: let
-        ws = builtins.toString (i + 1);
-      in [
-        "$mod, code:1${builtins.toString i}, workspace, ${ws}"
-        "$mod SHIFT, code:1${builtins.toString i}, movetoworkspace, ${ws}"
-      ]) 9));
+      bind =
+        [
+          "$mod, C, killactive"
+          "$mod, V, togglefloating"
+          "$mod, Q, exit"
+          "$mod, Return, exec, $terminal"
+          "$mod, B, exec, $browser"
+          "$mod, F, exec, $terminal -e $fileManager"
+          "$mod, h, movefocus, l"
+          "$mod, l, movefocus, r"
+          "$mod, k, movefocus, u"
+          "$mod, j, movefocus, d"
+          ", Print, exec, ~/.local/bin/screenshot"
+          "$mod, R, exec, rofi -show drun -show-icons"
+          "$mod, I, exec, swayimg"
+          "$mod SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+        ]
+        ++ (builtins.concatLists (builtins.genList (i: let
+            ws = builtins.toString (i + 1);
+          in [
+            "$mod, code:1${builtins.toString i}, workspace, ${ws}"
+            "$mod SHIFT, code:1${builtins.toString i}, movetoworkspace, ${ws}"
+          ])
+          9));
 
       bindm = [
         "$mod, mouse:272, movewindow"
@@ -145,10 +146,12 @@
         kb_options = "grp:alt_shift_toggle";
         follow_mouse = 1;
         sensitivity = 0;
-        touchpad = { natural_scroll = false; };
+        touchpad = {
+          natural_scroll = false;
+        };
       };
 
-      # Современный синтаксис правил Hyprland 0.53+
+      # Новый синтаксис правил для Hyprland 0.53+
       windowrule = [
         "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
         "move 20 monitor_h-120, class:hyprland-run"
@@ -161,8 +164,7 @@
         "blur, match:namespace rofi"
       ];
 
-      # Оставляем только то, что действительно должно быть в exec-once
-      # Демоны вынесены в services.*.enable ниже
+      # Оставляем в exec-once только то, у чего нет нативного systemd-модуля в HM
       exec-once = [
         "waybar"
         "dbus-update-activation-environment --systemd --all"
@@ -170,7 +172,7 @@
     };
   };
 
-  # === НАТИВНЫЕ МОДУЛИ HOME MANAGER (заменяют exec-once) ===
+  # --- НАТИВНЫЕ МОДУЛИ HOME MANAGER (заменяют ручные systemd-юниты и exec-once) ---
   
   services.kanshi = {
     enable = true;
@@ -182,12 +184,39 @@
           outputs = [{ criteria = "eDP-1"; mode = "1920x1080@60"; position = "0,0"; scale = 1.0; }];
         };
       }
-      # ... (оставьте ваши профили home и desktop без изменений)
     ];
   };
 
-  services.hypridle.enable = true;
-  services.hyprpaper.enable = true;
-  services.cliphist.enable = true;
-  services.swayosd.enable = true; # <-- Это полностью заменяет ручной systemd-юнит!
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      preload = [ "/home/sgm/Pictures/workspaces/workspace.jpg" ]; # Убедитесь, что путь верный
+      wallpaper = [ "eDP-1, /home/sgm/Pictures/workspaces/workspace.jpg" ];
+    };
+  };
+
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        lock_cmd = "pidof hyprlock || hyprlock";
+        before_sleep_cmd = "loginctl lock-session";
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+      };
+      listener = [
+        { timeout = 600; on-timeout = "loginctl lock-session"; }
+        { timeout = 660; on-timeout = "hyprctl dispatch dpms off"; on-resume = "hyprctl dispatch dpms on"; }
+      ];
+    };
+  };
+
+  services.cliphist = {
+    enable = true;
+    # Нативный модуль сам создаст правильный сервис с wl-paste --watch
+  };
+
+  services.swayosd = {
+    enable = true;
+    # Нативный модуль сам создаст правильный сервис с swayosd-server
+  };
 }
