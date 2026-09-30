@@ -11,22 +11,6 @@
     wl-clipboard      # CLI для Wayland буфера (требуется cliphist)
   ];
 
-  # Сервис для cliphist (запускается как демон)
-  systemd.user.services.cliphist = {
-    Unit = {
-      Description = "Clipboard history daemon";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.cliphist}/bin/cliphist daemon";
-      Restart = "on-failure";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
   # Скрипт для скриншотов с аннотацией
   home.file.".local/bin/screenshot".source = pkgs.writeShellScript    "screenshot" ''
     #!/usr/bin/env bash

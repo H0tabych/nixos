@@ -3,6 +3,7 @@
 {
   programs.yazi = {
     enable = true;
+    shellWrapperName = "y";
     settings = {
       yazi = {
         ratio = [ 1 4 3 ];
