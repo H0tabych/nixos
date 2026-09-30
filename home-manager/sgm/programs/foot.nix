@@ -43,7 +43,7 @@
         bright7 = "ffffff";
 
         # Курсор: строка "foreground background"
-        cursor = "4ade80 121212";
+        cursor = "121212 4ade80";
       };
 
       scrollback = {

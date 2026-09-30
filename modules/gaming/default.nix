@@ -28,7 +28,7 @@
 
     # Инструменты для запуска игр
     lutris # Лаунчер для игр не из Steam
-    wineWowPackages.stagingFull # Последняя версия Wine для запуска Windows-игр
+    wineWow64Packages.stagingFull # Последняя версия Wine для запуска Windows-игр
     winetricks # Помощник для настройки Wine
 
     # Дополнительные 32-битные библиотеки для MangoHud

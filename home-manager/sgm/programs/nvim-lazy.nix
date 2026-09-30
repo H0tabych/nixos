@@ -33,10 +33,10 @@
      # === LSP серверы ===
     nil                           # Nix LSP
     lua-language-server           # Lua LSP
-    nodePackages.vim-language-server  # Vimscript LSP
+    vim-language-server  # Vimscript LSP
 
     # === Форматтеры ===
-    nixfmt-rfc-style              # Nix форматтер (или nixfmt-rfc-style)
+    nixfmt
     stylua                        # Lua форматтер
 
     # === Линтеры ===
@@ -73,7 +73,7 @@
     # ВАЖНО: отключаем генерацию конфигов Home Manager
     # Вся конфигурация — в нашей портативной директории
     extraConfig = "";
-    extraLuaConfig = "";
+    initLua = "";
     extraPackages = [];
   };
 }

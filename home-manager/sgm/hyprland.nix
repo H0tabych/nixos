@@ -154,7 +154,7 @@
           "$mod, I, exec, swayimg"
 
           # Буфер обмена
-          "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+          "$mod SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         ]
         # Генерация биндов для воркспейсов 1-9
         ++ (builtins.concatLists (builtins.genList (i: let
@@ -202,27 +202,19 @@
       };
 
       # === WINDOW RULES (НОВЫЙ СИНТАКСИС 0.53+) ===
-      # Используем windowrulev2 с анонимным синтаксисом
-      windowrulev2 = [
-        # Подавить maximize события для всех окон
-        "suppressevent maximize, class:.*"
-
-        # Fix XWayland dragging issues
-        "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
-
-        # Переместить hyprland-run в нужное место
-        "move 20 monitor_h-120, class:hyprland-run"
-        "float, class:hyprland-run"
-
-        # Пример: сделать окно терминала плавающим по умолчанию
-        # "float, class:kitty, title:popup"
+      # Используем новый формат с явным указанием match: [[26]]
+      windowrule = [
+        "match:class .*, suppressevent maximize"
+        "match:class ^$, match:title ^$, match:xwayland 1, match:floating 1, match:fullscreen 0, match:pinned 0, nofocus"
+        "match:class hyprland-run, move 20 monitor_h-120"
+        "match:class hyprland-run, float"
       ];
 
-      # === LAYER RULES ===
+      # === LAYER RULES (Синтаксис Hyprland 0.53+) ===
       layerrule = [
-        "blur, waybar"
-        "ignorealpha 0.2, waybar"
-        "blur, rofi"
+        "match:namespace waybar, blur"
+        "match:namespace waybar, ignorealpha 0.2"
+        "match:namespace rofi, blur"
       ];
 
       # === EXEC ON STARTUP ===

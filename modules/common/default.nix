@@ -51,4 +51,10 @@
 
   # State version (не менять после первой установки!)
   system.stateVersion = stateVersion;
+
+  # Включаем dconf, чтобы настройки тем и внешнего вида из Home Manager применялись корректно
+  programs.dconf.enable = true;
+
+  # Добавляем PAM-сервис для hyprlock, чтобы избежать блокировки входа после сна ноутбука
+  security.pam.services.hyprlock = {};
 }
