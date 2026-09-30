@@ -29,6 +29,15 @@
         "HYPRCURSOR_SIZE,16"
         "XCURSOR_SIZE,16"
         "NIXOS_OZONE_WL,1"
+
+        "http_proxy,http://127.0.0.1:10809"
+        "https_proxy,http://127.0.0.1:10809"
+        "HTTP_PROXY,http://127.0.0.1:10809"
+        "HTTPS_PROXY,http://127.0.0.1:10809"
+        "all_proxy,socks5h://127.0.0.1:10808"
+        "ALL_PROXY,socks5h://127.0.0.1:10808"
+        "no_proxy,localhost,127.0.0.1,.local,.ru,.su,.xn--p1ai"
+        "NO_PROXY,localhost,127.0.0.1,.local,.ru,.su,.xn--p1ai"
       ];
 
       # === MONITORS ===
@@ -204,17 +213,18 @@
       # === WINDOW RULES (НОВЫЙ СИНТАКСИС 0.53+) ===
       # Используем новый формат с явным указанием match: [[26]]
       windowrule = [
-        "match:class .*, suppressevent maximize"
-        "match:class ^$, match:title ^$, match:xwayland 1, match:floating 1, match:fullscreen 0, match:pinned 0, nofocus"
-        "match:class hyprland-run, move 20 monitor_h-120"
-        "match:class hyprland-run, float"
+        #"suppress_event maximize, class:.*"
+        "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
+        "move 20 monitor_h-120, class:hyprland-run"
+        "float, class:hyprland-run"
       ];
 
       # === LAYER RULES (Синтаксис Hyprland 0.53+) ===
+      # Формат строго: "эффект, match:namespace имя_слоя" [[31]]
       layerrule = [
-        "match:namespace waybar, blur"
-        "match:namespace waybar, ignorealpha 0.2"
-        "match:namespace rofi, blur"
+        "blur, match:namespace waybar"
+        "ignorealpha 0.2, match:namespace waybar"
+        "blur, match:namespace rofi"
       ];
 
       # === EXEC ON STARTUP ===

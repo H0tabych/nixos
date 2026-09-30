@@ -69,11 +69,9 @@
     https_proxy = "http://127.0.0.1:10809";
     HTTP_PROXY  = "http://127.0.0.1:10809";
     HTTPS_PROXY = "http://127.0.0.1:10809";
-    all_proxy   = "socks5://127.0.0.1:10808";
-    ALL_PROXY   = "socks5://127.0.0.1:10808";
-    
-    # Исключаем локальные адреса и домены .ru из прокси
-    no_proxy    = "localhost,127.0.0.1,.local,.ru,.рф";
-    NO_PROXY    = "localhost,127.0.0.1,.local,.ru,.рф";
+    all_proxy   = "socks5h://127.0.0.1:10808";  # ← ИСПРАВЛЕНО: было socks5://
+    ALL_PROXY   = "socks5h://127.0.0.1:10808";
+    no_proxy    = "localhost,127.0.0.1,.local,.ru,.su,.xn--p1ai"; # ← .рф → .xn--p1ai
+    NO_PROXY    = "localhost,127.0.0.1,.local,.ru,.su,.xn--p1ai";
   };
 }
