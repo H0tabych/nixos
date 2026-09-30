@@ -1,5 +1,5 @@
 # ~/nixos-config/home-manager/sgm/programs/theming.nix
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   gtk = {
