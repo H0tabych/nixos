@@ -69,6 +69,8 @@
     defaultEditor = true;    # Сделать nvim редактором по умолчанию
     viAlias = true;          # vi → nvim
     vimAlias = true;         # vim → nvim
+    withPython3 = true;
+    withRuby = false;
 
     # ВАЖНО: отключаем генерацию конфигов Home Manager
     # Вся конфигурация — в нашей портативной директории

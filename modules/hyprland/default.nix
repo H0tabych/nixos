@@ -12,6 +12,7 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    withUWSM = true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -38,7 +39,7 @@
     # Для Wayland-приложений
     QT_QPA_PLATFORM = lib.mkDefault "wayland;xcb";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    SDL_VIDEODRIVER = lib.mkDefault "wayland";
+    # SDL_VIDEODRIVER = lib.mkDefault "wayland";
     CLUTTER_BACKEND = "wayland";
 
     # Для Electron-приложений
@@ -46,7 +47,7 @@
   };
   xdg.portal = {
     enable = true;
-    wlr.enable = true; # Обязательно для wlroots-композиторов
+    # wlr.enable = true; # Обязательно для wlroots-композиторов
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-hyprland

@@ -14,7 +14,7 @@
     FontSize = "12";
     RoundCorners = "20"; # Скругления в стиле вашей панели
     BackgroundPlaceholder = ""; # Путь к картинке-заглушке, если нужна
-    Background = "/home/${user}/Pictures/workspaces/workspace.jpg"; # Основной фон (замените на ваш файл)
+    # Background = "/home/${user}/Pictures/workspaces/workspace.jpg"; # Основной фон (замените на ваш файл)
     DimBackground = "0.0"; # Затемнение фона
     HeaderTextColor = "#e0e0e0"; # Цвет заголовка (мягкий белый)
     DateTextColor = "#e0e0e0";

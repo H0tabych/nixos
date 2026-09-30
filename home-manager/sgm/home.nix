@@ -50,6 +50,7 @@
   xdg.userDirs = {
     enable = true;
     createDirectories = true; # Создаём папки, если их нет
+    setSessionVariables = false;
     # Настраиваем пути
     desktop = "\${HOME}/Desktop";
     documents = "\${HOME}/Documents";
