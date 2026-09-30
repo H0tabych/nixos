@@ -7,6 +7,7 @@
 }: {
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
     configType = "lua"; # Используем современный Lua-генератор Home Manager
     systemd.enable = false; # КРИТИЧНО: отключаем HM systemd, так как используем UWSM на уровне системы
 
