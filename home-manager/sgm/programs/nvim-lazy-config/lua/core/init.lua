@@ -43,7 +43,8 @@ utils.safe_require("config.dap") -- ВКЛЮЧЕНО
 -- ВАЖНО: Вызываем setup(), так как логика маппингов находится внутри M.setup()
 local function try_setup(name)
   local ok, m = pcall(require, name)
-  if ok and m and type(m.setup) == "function" then
+  -- Проверяем, что m это таблица, прежде чем обращаться к .setup
+  if ok and type(m) == "table" and type(m.setup) == "function" then
     m.setup()
   end
 end

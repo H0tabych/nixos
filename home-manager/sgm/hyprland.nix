@@ -7,6 +7,7 @@
 }: {
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
 
     # Используем пакет из NixOS-модуля (не дублируем)
     package = null;
@@ -152,7 +153,8 @@
           "$mod, j, movefocus, d"
 
           # Скриншот
-          ", Print, exec, ~/.local/bin/screenshot"
+          ", Print, exec, bash -c \"~/.local/bin/screenshot\""
+          #", Print, exec, ~/.local/bin/screenshot"
 
           # Rofi
           "$mod, R, exec, rofi -show drun -show-icons"
@@ -230,22 +232,6 @@
   
   # === СИСТЕМНЫЕ СЕРВИСЫ HOME MANAGER ===
   services.swayosd.enable = true;
-  services.hypridle = {
-    enable = true;
-    settings = {
-      general = {
-        after_sleep_cmd = "hyprctl dispatch dpms on";
-        lock_cmd = "hyprlock";
-      };
-      listener = [
-        {
-          timeout = 600; # 10 минут
-          on-timeout = "hyprlock";
-        }
-      ];
-    };
-  };
-
   # === KANSHI CONFIGURATION ===
   services.kanshi = {
     enable = true;

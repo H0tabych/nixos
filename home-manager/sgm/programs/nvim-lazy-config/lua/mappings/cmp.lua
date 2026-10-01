@@ -38,3 +38,4 @@ map({ "i", "s" }, "<C-c>", function()
     require("luasnip").unlink_current()
   end
 end, { desc = "Exit snippet" })
+
