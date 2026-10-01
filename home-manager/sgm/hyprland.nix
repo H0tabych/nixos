@@ -1,3 +1,4 @@
+# ~/nixos-config/home-manager/sgm/hyprland.nix
 {
   config,
   pkgs,
@@ -81,7 +82,7 @@
 
       # === ANIMATIONS ===
       animations = {
-        enabled = true; # Было: "yes, please :)" — теперь только boolean
+        enabled = true;
 
         bezier = [
           "easeOutQuint, 0.23, 1, 0.32, 1"
@@ -114,7 +115,6 @@
 
       # === DWINDLE LAYOUT ===
       dwindle = {
-        # pseudotile удалён — не указываем
         preserve_split = true;
       };
 
@@ -125,9 +125,8 @@
 
       # === MISC ===
       misc = {
-        force_default_wallpaper = -1;
+        force_default_wallpaper = -1; # ИСПРАВЛЕНО: было force_default_wallpaaper
         disable_hyprland_logo = false;
-        # disable_splash_rendering = true; # опционально
       };
 
       # === VARIABLES ===
@@ -210,23 +209,19 @@
         };
       };
 
-      # === WINDOW RULES (НОВЫЙ СИНТАКСИС 0.53+) ===
-      # Используем новый формат с явным указанием match: [[26]]
+      # === WINDOW RULES (Новый синтаксис Hyprland 0.53+) ===
       windowrule = [
-        #"suppress_event maximize, class:.*"
-        "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
-        "move 20 monitor_h-120, class:hyprland-run"
-        "float, class:hyprland-run"
+        # Плавающий режим для лаунчера
+        "match:class hyprland-run, float on"
+        "match:class hyprland-run, center on"
       ];
 
-      # === LAYER RULES (Синтаксис Hyprland 0.53+) ===
-      # Формат строго: "эффект, match:namespace имя_слоя" [[31]]
+      # === LAYER RULES (Новый синтаксис Hyprland 0.53+) ===
       layerrule = [
-        "blur, match:namespace waybar"
-        "ignorealpha 0.2, match:namespace waybar"
-        "blur, match:namespace rofi"
+        "match:namespace waybar, blur on ignorealpha 0.2"
+        "match:namespace rofi, blur on ignorealpha 0.2"
       ];
-
+      
       # === EXEC ON STARTUP ===
       exec-once = [
         "kanshi"
@@ -235,8 +230,8 @@
         "hypridle"
         "swayosd"
         "wl-paste --watch cliphist store"
-        # Важно для systemd-сервисов
-        "dbus-update-activation-environment --systemd --all"
+        # УДАЛЕНО: dbus-update-activation-environment --systemd --all
+        # Эта команда уже добавляется автоматически через systemd.variables = ["--all"]
       ];
     };
   };

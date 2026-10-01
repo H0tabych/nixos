@@ -2,17 +2,16 @@
 { config, pkgs, ... }:
 
 {
+  # Пакеты, специфичные для пользователя (не дублируем системные)
   home.packages = with pkgs; [
-    grim              # Создание скриншотов
-    slurp             # Выбор области
     satty             # Аннотирование скриншотов
     cliphist          # Менеджер истории буфера обмена
     brightnessctl     # Управление яркостью
-    wl-clipboard      # CLI для Wayland буфера (требуется cliphist)
+    # grim, slurp, wl-clipboard уже установлены в modules/hyprland/default.nix
   ];
 
   # Скрипт для скриншотов с аннотацией
-  home.file.".local/bin/screenshot".source = pkgs.writeShellScript    "screenshot" ''
+  home.file.".local/bin/screenshot".source = pkgs.writeShellScript "screenshot" ''
     #!/usr/bin/env bash
     set -euo pipefail
     FILE=~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
