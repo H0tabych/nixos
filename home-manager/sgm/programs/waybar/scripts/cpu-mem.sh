@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export LC_ALL=C
 # ~/.config/waybar/scripts/cpu-mem.sh
 ABS_MODE=$([ -f "$HOME/.cache/waybar-cpu-mem-abs" ] && echo true || echo false)
 

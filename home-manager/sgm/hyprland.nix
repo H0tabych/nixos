@@ -24,7 +24,6 @@
       # === ENVIRONMENT VARIABLES ===
       env = [
         "AQ_DRM_DEVICES,/dev/dri/card1:/dev/dri/card0"
-        "GBM_BACKEND,nvidia-drm"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,1"
         "HYPRCURSOR_SIZE,16"
@@ -224,17 +223,27 @@
       
       # === EXEC ON STARTUP ===
       exec-once = [
-        "kanshi"
-        "waybar"
-        "hyprpaper"
-        "hypridle"
-        "swayosd"
         "wl-paste --watch cliphist store"
-        # УДАЛЕНО: dbus-update-activation-environment --systemd --all
-        # Эта команда уже добавляется автоматически через systemd.variables = ["--all"]
       ];
     };
   };
+  
+  # === СИСТЕМНЫЕ СЕРВИСЫ HOME MANAGER ===
+  services.swayosd.enable = true;
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+        lock_cmd = "hyprlock";
+      };
+      listener = [
+        {
+          timeout = 600; # 10 минут
+          on-timeout = "hyprlock";
+        }
+      ];
+    };
 
   # === KANSHI CONFIGURATION ===
   services.kanshi = {

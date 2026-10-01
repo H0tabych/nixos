@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export LC_ALL=C
 # ~/.config/waybar/scripts/net-bluetooth.sh
 
 CACHE_DIR="$HOME/.cache/waybar"

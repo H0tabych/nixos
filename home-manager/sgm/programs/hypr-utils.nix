@@ -1,28 +1,28 @@
-# ~/nixos-config/home-manager/sgm/programs/hypr-utils.nix
 { config, pkgs, ... }:
-
 {
-  # Пакеты, специфичные для пользователя (не дублируем системные)
   home.packages = with pkgs; [
-    satty             # Аннотирование скриншотов
-    cliphist          # Менеджер истории буфера обмена
-    brightnessctl     # Управление яркостью
-    # grim, slurp, wl-clipboard уже установлены в modules/hyprland/default.nix
+    swappy     # Стабильный редактор скриншотов для Wayland
+    cliphist
+    brightnessctl
   ];
 
-  # Скрипт для скриншотов с аннотацией
   home.file.".local/bin/screenshot".source = pkgs.writeShellScript "screenshot" ''
     #!/usr/bin/env bash
     set -euo pipefail
-    FILE=~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
-    mkdir -p ~/Pictures/Screenshots
+    
+    DIR="$HOME/Pictures/Screenshots"
+    mkdir -p "$DIR"
+    FILE="$DIR/$(date +'%Y-%m-%d_%H-%M-%S').png"
 
-    # ВАЖНО: satty не принимает флаг -o. Используем --output-filename.
-    # Пайпим grim напрямую в satty через stdin.
-    grim -g "$(slurp -d -b '#00000080')" - | satty --filename - --output-filename "$FILE"
-
-    # Копируем готовый файл в буфер обмена
-    wl-copy < "$FILE"
-    notify-send "Screenshot saved" "$FILE"
+    # Делаем скриншот области
+    if grim -g "$(slurp -d -b '#00000080')" "$FILE"; then
+        # КРИТИЧНО: Копируем в буфер обмена как ИЗОБРАЖЕНИЕ
+        wl-copy --type image/png < "$FILE"
+        
+        notify-send "Screenshot saved" "$FILE" -i "$FILE"
+        
+        # Если нужно редактирование, раскомментируйте:
+        # swappy -f "$FILE"
+    fi
   '';
 }

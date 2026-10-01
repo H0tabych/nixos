@@ -36,16 +36,22 @@ if ok_lazy then
 end
 
 -- 4. Загрузка конфигурации поведения плагинов
--- (после того, как плагины загружены)
 utils.safe_require("config.lsp")
--- utils.safe_require("config.dap")
--- utils.safe_require("config.telescope")
+utils.safe_require("config.dap") -- ВКЛЮЧЕНО
 
 -- 5. Загрузка горячих клавиш плагинов
-utils.safe_require("mappings.ui")
-utils.safe_require("mappings.lsp")
--- utils.safe_require("mappings.dap")
-utils.safe_require("mappings.telescope")
-utils.safe_require("mappings.git")
-utils.safe_require("mappings.treesitter")
-utils.safe_require("mappings.cmp")
+-- ВАЖНО: Вызываем setup(), так как логика маппингов находится внутри M.setup()
+local function try_setup(name)
+  local ok, m = pcall(require, name)
+  if ok and m and type(m.setup) == "function" then
+    m.setup()
+  end
+end
+
+try_setup("mappings.ui")
+try_setup("mappings.lsp")
+try_setup("mappings.dap")       -- ВКЛЮЧЕНО
+try_setup("mappings.telescope")
+try_setup("mappings.git")
+try_setup("mappings.treesitter")
+try_setup("mappings.cmp")

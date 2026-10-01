@@ -1,18 +1,9 @@
-# ~/nixos-config/home-manager/sgm/programs/waybar/default.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{ config, pkgs, ... }: {
   home.packages = with pkgs; [
-    waybar
-    rofi
-    curl
-    bc
-    gnugrep
-    gawk
-    procps
-
+    waybar rofi curl bc gnugrep gawk procps
+    pamixer      # Для управления громкостью
+    pavucontrol  # Для on-click в аудио модуле
+    playerctl    # Для управления медиа
     nerd-fonts.symbols-only
   ];
 
@@ -20,32 +11,13 @@
   xdg.configFile."waybar/config.jsonc".source = ./config.jsonc;
   xdg.configFile."waybar/style.css".source = ./style.css;
 
-  xdg.configFile."waybar/scripts/weather.sh" = {
-    source = ./scripts/weather.sh;
-    executable = true;
-  };
-  xdg.configFile."waybar/scripts/audio-brightness.sh" = {
-    source = ./scripts/audio-brightness.sh;
-    executable = true;
-  };
-  xdg.configFile."waybar/scripts/net-bluetooth.sh" = {
-    source = ./scripts/net-bluetooth.sh;
-    executable = true;
-  };
-  xdg.configFile."waybar/scripts/cpu-mem.sh" = {
-    source = ./scripts/cpu-mem.sh;
-    executable = true;
-  };
-  xdg.configFile."waybar/scripts/toggle-cpu-mem-format.sh" = {
-    source = ./scripts/toggle-cpu-mem-format.sh;
-    executable = true;
-  };
-  xdg.configFile."waybar/scripts/toggle-time.sh" = {
-    source = ./scripts/toggle-time.sh;
-    executable = true;
-  };
-  xdg.configFile."waybar/scripts/powermenu.sh" = {
-    source = ./scripts/powermenu.sh;
-    executable = true;
-  };
+  # Скрипты
+  xdg.configFile."waybar/scripts/weather.sh" = { source = ./scripts/weather.sh; executable = true; };
+  xdg.configFile."waybar/scripts/audio-brightness.sh" = { source = ./scripts/audio-brightness.sh; executable = true; };
+  xdg.configFile."waybar/scripts/net-bluetooth.sh" = { source = ./scripts/net-bluetooth.sh; executable = true; };
+  xdg.configFile."waybar/scripts/cpu-mem.sh" = { source = ./scripts/cpu-mem.sh; executable = true; };
+  xdg.configFile."waybar/scripts/toggle-cpu-mem-format.sh" = { source = ./scripts/toggle-cpu-mem-format.sh; executable = true; };
+  # toggle-time.sh УДАЛЕН, так как он ломает симлинки в /nix/store. 
+  # Waybar сам переключает format-alt по клику.
+  xdg.configFile."waybar/scripts/powermenu.sh" = { source = ./scripts/powermenu.sh; executable = true; };
 }

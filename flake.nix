@@ -8,10 +8,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #nixvim = {
+    #  url = "github:nix-community/nixvim/nixos-26.05";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
   };
 
   outputs = {
@@ -64,9 +64,9 @@
         extraModules = [
           inputs.impermanence.nixosModules.impermanence
         ];
-        extraHmModules = [
-          inputs.nixvim.homeModules.nixvim
-        ];
+        #extraHmModules = [
+        #  inputs.nixvim.homeModules.nixvim
+        #];
       };
 
       # Пример для будущего сервера:
