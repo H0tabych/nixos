@@ -1,4 +1,3 @@
-# ~/nixos-config/home-manager/sgm/hyprland.nix
 {
   config,
   pkgs,
@@ -7,24 +6,46 @@
 }: {
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "hyprlang";
-    configType = "lua"; # Используем современный Lua-генератор Home Manager
-    systemd.enable = false; # КРИТИЧНО: отключаем HM systemd, так как используем UWSM на уровне системы
 
+    # Используем пакет из NixOS-модуля (не дублируем)
+    package = null;
+    portalPackage = null;
+
+    # Важно для systemd-сервисов
+    systemd.enable = true;
+    systemd.variables = ["--all"];
+
+    # Включаем XWayland для совместимости
+    xwayland.enable = true;
+
+    # Конфигурация в формате Nix (конвертируется в Lua/INI)
     settings = {
+      # === ENVIRONMENT VARIABLES ===
       env = [
-        "AQ_DRM_DEVICES,/dev/dri/by-path/pci-0000:01:00.0-card:/dev/dri/by-path/pci-0000:00:02.0-card" # Более надёжный путь, чем card1:card0
+        "AQ_DRM_DEVICES,/dev/dri/card1:/dev/dri/card0"
         "GBM_BACKEND,nvidia-drm"
         "__GL_GSYNC_ALLOWED,1"
         "__GL_VRR_ALLOWED,1"
         "HYPRCURSOR_SIZE,16"
         "XCURSOR_SIZE,16"
         "NIXOS_OZONE_WL,1"
+
         "http_proxy,http://127.0.0.1:10809"
         "https_proxy,http://127.0.0.1:10809"
-        "no_proxy,localhost,127.0.0.1,::1,.local,/run/user,/tmp" # Важно для работы локального DBus/Wayland
+        "HTTP_PROXY,http://127.0.0.1:10809"
+        "HTTPS_PROXY,http://127.0.0.1:10809"
+        "all_proxy,socks5h://127.0.0.1:10808"
+        "ALL_PROXY,socks5h://127.0.0.1:10808"
+        "no_proxy,localhost,127.0.0.1,.local,.ru,.su,.xn--p1ai"
+        "NO_PROXY,localhost,127.0.0.1,.local,.ru,.su,.xn--p1ai"
       ];
 
+      # === MONITORS ===
+      # monitor = [
+      #   "eDP-1, 1920x1080@60, 0x0, 1"
+      # ];
+
+      # === GENERAL ===
       general = {
         gaps_in = 3;
         gaps_out = 10;
@@ -36,17 +57,20 @@
         layout = "dwindle";
       };
 
+      # === DECORATION ===
       decoration = {
         rounding = 10;
         active_opacity = 1.0;
         inactive_opacity = 1.0;
         fullscreen_opacity = 1.0;
+
         blur = {
           enabled = true;
           size = 5;
           passes = 1;
           vibrancy = 0.1696;
         };
+
         shadow = {
           enabled = true;
           range = 4;
@@ -55,8 +79,10 @@
         };
       };
 
+      # === ANIMATIONS ===
       animations = {
-        enabled = true;
+        enabled = true; # Было: "yes, please :)" — теперь только boolean
+
         bezier = [
           "easeOutQuint, 0.23, 1, 0.32, 1"
           "easeInOutCubic, 0.65, 0.05, 0.36, 1"
@@ -64,6 +90,7 @@
           "almostLinear, 0.5, 0.5, 0.75, 1"
           "quick, 0.15, 0, 0.1, 1"
         ];
+
         animation = [
           "global, 1, 10, default"
           "border, 1, 5.39, easeOutQuint"
@@ -74,45 +101,71 @@
           "fadeOut, 1, 1.46, almostLinear"
           "fade, 1, 3.03, quick"
           "layers, 1, 3.81, easeOutQuint"
+          "layersIn, 1, 4, easeOutQuint, fade"
+          "layersOut, 1, 1.5, linear, fade"
+          "fadeLayersIn, 1, 1.79, almostLinear"
+          "fadeLayersOut, 1, 1.39, almostLinear"
           "workspaces, 1, 1.94, almostLinear, fade"
+          "workspacesIn, 1, 1.21, almostLinear, fade"
+          "workspacesOut, 1, 1.94, almostLinear, fade"
+          "zoomFactor, 1, 7, quick"
         ];
       };
 
+      # === DWINDLE LAYOUT ===
       dwindle = {
+        # pseudotile удалён — не указываем
         preserve_split = true;
       };
 
+      # === MASTER LAYOUT ===
       master = {
         new_status = "master";
       };
 
+      # === MISC ===
       misc = {
         force_default_wallpaper = -1;
         disable_hyprland_logo = false;
+        # disable_splash_rendering = true; # опционально
       };
 
+      # === VARIABLES ===
       "$mod" = "SUPER";
       "$terminal" = "foot";
       "$fileManager" = "yazi";
       "$browser" = "firefox";
 
+      # === KEYBINDINGS ===
       bind =
         [
+          # Основные
           "$mod, C, killactive"
           "$mod, V, togglefloating"
           "$mod, Q, exit"
           "$mod, Return, exec, $terminal"
           "$mod, B, exec, $browser"
           "$mod, F, exec, $terminal -e $fileManager"
+
+          # Навигация
           "$mod, h, movefocus, l"
           "$mod, l, movefocus, r"
           "$mod, k, movefocus, u"
           "$mod, j, movefocus, d"
+
+          # Скриншот
           ", Print, exec, ~/.local/bin/screenshot"
+
+          # Rofi
           "$mod, R, exec, rofi -show drun -show-icons"
+
+          # Swayimg
           "$mod, I, exec, swayimg"
+
+          # Буфер обмена
           "$mod SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         ]
+        # Генерация биндов для воркспейсов 1-9
         ++ (builtins.concatLists (builtins.genList (i: let
             ws = builtins.toString (i + 1);
           in [
@@ -121,11 +174,13 @@
           ])
           9));
 
+      # Mouse bindings
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
       ];
 
+      # Media keys (exec-once)
       bindel = [
         ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
         ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
@@ -135,6 +190,7 @@
         ",XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-"
       ];
 
+      # Media keys (latched)
       bindl = [
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPause, exec, playerctl play-pause"
@@ -142,39 +198,50 @@
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
+      # === INPUT ===
       input = {
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
         follow_mouse = 1;
         sensitivity = 0;
+
         touchpad = {
           natural_scroll = false;
         };
       };
 
-      # Новый синтаксис правил для Hyprland 0.53+
+      # === WINDOW RULES (НОВЫЙ СИНТАКСИС 0.53+) ===
+      # Используем новый формат с явным указанием match: [[26]]
       windowrule = [
+        #"suppress_event maximize, class:.*"
         "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
         "move 20 monitor_h-120, class:hyprland-run"
         "float, class:hyprland-run"
       ];
 
+      # === LAYER RULES (Синтаксис Hyprland 0.53+) ===
+      # Формат строго: "эффект, match:namespace имя_слоя" [[31]]
       layerrule = [
         "blur, match:namespace waybar"
         "ignorealpha 0.2, match:namespace waybar"
         "blur, match:namespace rofi"
       ];
 
-      # Оставляем в exec-once только то, у чего нет нативного systemd-модуля в HM
+      # === EXEC ON STARTUP ===
       exec-once = [
+        "kanshi"
         "waybar"
+        "hyprpaper"
+        "hypridle"
+        "swayosd"
+        "wl-paste --watch cliphist store"
+        # Важно для systemd-сервисов
         "dbus-update-activation-environment --systemd --all"
       ];
     };
   };
 
-  # --- НАТИВНЫЕ МОДУЛИ HOME MANAGER (заменяют ручные systemd-юниты и exec-once) ---
-  
+  # === KANSHI CONFIGURATION ===
   services.kanshi = {
     enable = true;
     systemdTarget = "hyprland-session.target";
@@ -182,42 +249,48 @@
       {
         profile = {
           name = "mobile";
-          outputs = [{ criteria = "eDP-1"; mode = "1920x1080@60"; position = "0,0"; scale = 1.0; }];
+          outputs = [
+            {
+              criteria = "eDP-1";
+              mode = "1920x1080@60";
+              position = "0,0";
+              scale = 1.0;
+            }
+          ];
+        };
+      }
+      {
+        profile = {
+          name = "home";
+          outputs = [
+            {
+              criteria = "eDP-1";
+              mode = "1920x1080@60";
+              position = "0,0";
+              scale = 1.0;
+            }
+            {
+              criteria = "HDMI-A-1";
+              mode = "1920x1080@60";
+              position = "1920,0";
+              scale = 1.0;
+            }
+          ];
+        };
+      }
+      {
+        profile = {
+          name = "desktop";
+          outputs = [
+            {
+              criteria = "HDMI-A-1";
+              mode = "1920x1080@60";
+              position = "1920,0";
+              scale = 1.0;
+            }
+          ];
         };
       }
     ];
-  };
-
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      preload = [ "/home/sgm/Pictures/workspaces/workspace.jpg" ]; # Убедитесь, что путь верный
-      wallpaper = [ "eDP-1, /home/sgm/Pictures/workspaces/workspace.jpg" ];
-    };
-  };
-
-  services.hypridle = {
-    enable = true;
-    settings = {
-      general = {
-        lock_cmd = "pidof hyprlock || hyprlock";
-        before_sleep_cmd = "loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
-      };
-      listener = [
-        { timeout = 600; on-timeout = "loginctl lock-session"; }
-        { timeout = 660; on-timeout = "hyprctl dispatch dpms off"; on-resume = "hyprctl dispatch dpms on"; }
-      ];
-    };
-  };
-
-  services.cliphist = {
-    enable = true;
-    # Нативный модуль сам создаст правильный сервис с wl-paste --watch
-  };
-
-  services.swayosd = {
-    enable = true;
-    # Нативный модуль сам создаст правильный сервис с swayosd-server
   };
 }

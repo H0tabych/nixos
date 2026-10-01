@@ -28,5 +28,6 @@
     acpi
 
     kitty
+    pamixer
   ];
 }
