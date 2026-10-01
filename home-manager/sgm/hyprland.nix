@@ -244,6 +244,7 @@
         }
       ];
     };
+  };
 
   # === KANSHI CONFIGURATION ===
   services.kanshi = {
